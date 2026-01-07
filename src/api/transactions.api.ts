@@ -16,9 +16,29 @@ export async function getTransaction(id: string): Promise<Transaction> {
       method: "GET",
     });
 
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => response.statusText);
+      throw new Error(`Erro ao buscar transação: ${response.status} ${errorText}`);
+    }
+
     const result: TransactionsListResponse | TransactionResponse = await response.json();
     
-    // O backend retorna um array de transações
+    // Verifica se result existe
+    if (!result || !result.result) {
+      throw new Error("Resposta inválida do servidor");
+    }
+    
+    // O backend retorna um objeto DetailedAccount diretamente em result.result
+    // Verifica se é um objeto Transaction válido
+    if (typeof result.result === 'object' && !Array.isArray(result.result)) {
+      const transaction = result.result as Transaction;
+      // Valida se tem os campos mínimos
+      if (transaction.id || transaction.accountId) {
+        return transaction;
+      }
+    }
+    
+    // Se for um array de transações
     if (Array.isArray(result.result)) {
       if (result.result.length === 0) {
         throw new Error("Transação não encontrada");
@@ -36,12 +56,13 @@ export async function getTransaction(id: string): Promise<Transaction> {
       return transactions[0];
     }
     
-    // Se não for array, tenta retornar diretamente
-    return result.result as Transaction;
+    throw new Error("Formato de resposta inválido do servidor");
   } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : "Erro ao buscar transação"
-    );
+    // Re-throw se já for um Error, senão cria um novo
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("Erro ao buscar transação");
   }
 }
 

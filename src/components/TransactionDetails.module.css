@@ -1,0 +1,103 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.card {
+  margin-top: 0;
+}
+
+.section {
+  padding: var(--spacing-md) 0;
+}
+
+.backButton {
+  margin-bottom: var(--spacing-lg);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.detailRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.label {
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: var(--font-caption);
+}
+
+.value {
+  word-break: break-word;
+}
+
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-background-subtle);
+  width: fit-content;
+}
+
+.attachmentSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--color-background-subtle);
+  margin-top: var(--spacing-md);
+}
+
+.attachmentTitle {
+  margin-bottom: var(--spacing-xs);
+}
+
+.attachmentInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  align-items: flex-start;
+}
+
+.attachmentName {
+  word-break: break-word;
+}
+
+.downloadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+@media (max-width: 768px) {
+  .detailRow {
+    grid-template-columns: 1fr;
+  }
+
+  .attachmentInfo {
+    align-items: stretch;
+  }
+
+  .downloadButton {
+    width: 100%;
+  }
+}
+

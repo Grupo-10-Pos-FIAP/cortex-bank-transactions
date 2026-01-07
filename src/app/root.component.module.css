@@ -1,8 +1,8 @@
 .container {
   max-width: var(--dimension-container-max-width);
   margin: 0 auto;
-  padding: var(--spacing-lg);
-  min-height: 100vh;
+  padding: var(--spacing-md);
+  box-sizing: border-box;
 }
 
 .loading,

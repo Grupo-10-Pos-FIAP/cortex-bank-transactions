@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Text, Loading, Button, Card } from "@grupo10-pos-fiap/design-system";
 import { getAccountId } from "@/utils/accountStorage";
-import { getTransactionIdFromUrl } from "@/utils/urlParams";
+import { getTransactionIdFromUrl, getViewParamFromUrl } from "@/utils/urlParams";
 import Transactions from "../Transactions";
+import TransactionDetails from "../components/TransactionDetails";
 import styles from "./root.component.module.css";
 
 export interface RootProps {
@@ -13,6 +14,7 @@ export default function Root(_props: RootProps) {
   const [accountId, setAccountId] = useState<string | null>(null);
   const [loadingAccount, setLoadingAccount] = useState<boolean>(true);
   const [transactionId, setTransactionId] = useState<string | null>(null);
+  const [view, setView] = useState<string | null>(null);
 
   const loadAccountId = useCallback(() => {
     setLoadingAccount(true);
@@ -28,10 +30,16 @@ export default function Root(_props: RootProps) {
     const id = getTransactionIdFromUrl();
     setTransactionId(id);
     
+    // Verifica o parâmetro view na URL
+    const viewParam = getViewParamFromUrl();
+    setView(viewParam);
+    
     // Escuta mudanças na URL
     const handleLocationChange = () => {
       const newId = getTransactionIdFromUrl();
       setTransactionId(newId);
+      const newView = getViewParamFromUrl();
+      setView(newView);
     };
     
     window.addEventListener("popstate", handleLocationChange);
@@ -44,6 +52,18 @@ export default function Root(_props: RootProps) {
   const handleRefresh = useCallback(() => {
     loadAccountId();
   }, [loadAccountId]);
+
+  const handleBackFromDetails = useCallback(() => {
+    // Remove os parâmetros da URL
+    if (window.history) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("view");
+      url.searchParams.delete("id");
+      window.history.replaceState({}, "", url.toString());
+      setView(null);
+      setTransactionId(null);
+    }
+  }, []);
 
   if (loadingAccount) {
     return (
@@ -77,6 +97,15 @@ export default function Root(_props: RootProps) {
             </div>
           </Card.Section>
         </Card>
+      </div>
+    );
+  }
+
+  // Se view=details e há transactionId, exibe a tela de detalhes
+  if (view === "details" && transactionId) {
+    return (
+      <div className={styles.container}>
+        <TransactionDetails transactionId={transactionId} onBack={handleBackFromDetails} />
       </div>
     );
   }

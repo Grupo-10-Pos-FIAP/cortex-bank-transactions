@@ -21,3 +21,10 @@ export function getTransactionIdFromUrl(): string | null {
   return getQueryParam("id");
 }
 
+/**
+ * Obtém o parâmetro 'view' da URL para determinar qual tela exibir
+ */
+export function getViewParamFromUrl(): string | null {
+  return getQueryParam("view");
+}
+
