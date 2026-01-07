@@ -1,0 +1,27 @@
+.errorMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+  text-align: center;
+  min-height: 200px;
+}
+
+.errorIcon {
+  margin-bottom: var(--spacing-md);
+}
+
+.errorTitle {
+  margin-bottom: var(--spacing-sm);
+}
+
+.errorText {
+  margin-bottom: var(--spacing-lg);
+  max-width: 400px;
+}
+
+.errorActions {
+  margin-top: var(--spacing-md);
+}
+
