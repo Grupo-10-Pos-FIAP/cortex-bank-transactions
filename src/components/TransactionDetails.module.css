@@ -13,6 +13,21 @@
   padding: var(--spacing-md) 0;
 }
 
+.headerActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
 .backButton {
   margin-bottom: var(--spacing-lg);
 }
@@ -98,6 +113,20 @@
 
   .downloadButton {
     width: 100%;
+  }
+
+  .headerActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actionButtons {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .actionButtons button {
+    flex: 1;
   }
 }
 

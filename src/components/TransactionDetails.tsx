@@ -1,21 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, Text, Button, Loading, Icon } from "@grupo10-pos-fiap/design-system";
 import { Transaction } from "@/types/transactions";
-import { getTransaction } from "@/api/transactions.api";
+import { getTransaction, deleteTransaction } from "@/api/transactions.api";
 import { formatCurrency } from "@/utils/formatters";
 import { formatDate } from "@/utils/dateUtils";
 import ErrorMessage from "./ErrorMessage";
+import SuccessModal from "./SuccessModal";
 import styles from "./TransactionDetails.module.css";
 
 interface TransactionDetailsProps {
   transactionId: string;
   onBack?: () => void;
+  onEdit?: (id: string) => void;
 }
 
-function TransactionDetails({ transactionId, onBack }: TransactionDetailsProps) {
+function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetailsProps) {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 
   const loadTransaction = useCallback(async () => {
     if (!transactionId) return;
@@ -55,6 +59,14 @@ function TransactionDetails({ transactionId, onBack }: TransactionDetailsProps) 
         // Para URLs relativas ou outros formatos, faz fetch
         const response = await fetch(url);
         if (!response.ok) {
+          // Redireciona para auth em caso de 401 (não autorizado)
+          if (response.status === 401) {
+            if (typeof window !== "undefined" && window.localStorage) {
+              // Limpa o token do localStorage antes de redirecionar
+              localStorage.removeItem("token");
+              window.location.href = "/auth";
+            }
+          }
           throw new Error("Erro ao baixar arquivo");
         }
 
@@ -77,6 +89,66 @@ function TransactionDetails({ transactionId, onBack }: TransactionDetailsProps) 
       }
     }
   }, []);
+
+  const handleEdit = useCallback(() => {
+    if (!transactionId) return;
+    
+    // Usa o callback do root para atualizar o estado corretamente
+    if (onEdit) {
+      onEdit(transactionId);
+    } else {
+      // Fallback: atualiza a URL diretamente
+      if (window.history) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("view");
+        url.searchParams.set("id", transactionId);
+        window.history.replaceState({}, "", url.toString());
+      }
+    }
+  }, [transactionId, onEdit]);
+
+  const handleDelete = useCallback(async () => {
+    if (!transactionId || !transaction) return;
+
+    if (!window.confirm("Tem certeza que deseja excluir esta transação?")) {
+      return;
+    }
+
+    setDeleting(true);
+    setError(null);
+
+    try {
+      await deleteTransaction(transactionId);
+      
+      // Mostra modal de sucesso
+      setShowSuccessModal(true);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error("Erro ao excluir transação"));
+      setDeleting(false);
+    }
+  }, [transactionId, transaction]);
+
+  const handleSuccessModalConfirm = useCallback(() => {
+    setShowSuccessModal(false);
+    
+    // Volta para a lista após excluir
+    if (onBack) {
+      onBack();
+    } else {
+      // Se não houver callback, remove os parâmetros da URL
+      if (window.history) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("view");
+        url.searchParams.delete("id");
+        window.history.replaceState({}, "", url.toString());
+        
+        // Força atualização do componente root
+        setTimeout(() => {
+          window.dispatchEvent(new PopStateEvent("popstate"));
+        }, 0);
+      }
+    }
+  }, [onBack]);
 
   if (loading) {
     return (
@@ -127,17 +199,41 @@ function TransactionDetails({ transactionId, onBack }: TransactionDetailsProps) 
   const hasAttachment = !!(transaction.urlAnexo || transaction.anexo);
 
   return (
-    <div className={styles.container}>
-      <Card title="Detalhes da Transação" variant="elevated" color="base" className={styles.card}>
+    <>
+      <SuccessModal
+        message="Transação excluída com sucesso!"
+        onConfirm={handleSuccessModalConfirm}
+        visible={showSuccessModal}
+      />
+      <div className={styles.container}>
+        <Card title="Detalhes da Transação" variant="elevated" color="base" className={styles.card}>
         <Card.Section className={styles.section}>
-          {onBack && (
-            <div className={styles.backButton}>
-              <Button variant="secondary" onClick={onBack} width="auto">
+          <div className={styles.headerActions}>
+            {onBack && (
+              <Button variant="secondary" onClick={onBack} width="auto" disabled={deleting}>
                 <Icon name="ArrowLeft" size="small" />
                 Voltar
               </Button>
+            )}
+            <div className={styles.actionButtons}>
+              <Button
+                variant="outlined"
+                onClick={handleEdit}
+                disabled={deleting || loading}
+                width="auto"
+              >
+                Editar
+              </Button>
+              <Button
+                variant="negative"
+                onClick={handleDelete}
+                disabled={deleting || loading}
+                width="auto"
+              >
+                {deleting ? "Excluindo..." : "Excluir"}
+              </Button>
             </div>
-          )}
+          </div>
 
           <div className={styles.details}>
             <div className={styles.detailRow}>
@@ -259,6 +355,7 @@ function TransactionDetails({ transactionId, onBack }: TransactionDetailsProps) 
         </Card.Section>
       </Card>
     </div>
+    </>
   );
 }
 

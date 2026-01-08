@@ -23,31 +23,59 @@ export default function Root(_props: RootProps) {
     setLoadingAccount(false);
   }, []);
 
+  // Carrega accountId na inicialização
   useEffect(() => {
     loadAccountId();
-    
-    // Verifica se há ID de transação na URL
-    const id = getTransactionIdFromUrl();
-    setTransactionId(id);
-    
-    // Verifica o parâmetro view na URL
-    const viewParam = getViewParamFromUrl();
-    setView(viewParam);
-    
-    // Escuta mudanças na URL
-    const handleLocationChange = () => {
-      const newId = getTransactionIdFromUrl();
-      setTransactionId(newId);
-      const newView = getViewParamFromUrl();
-      setView(newView);
+  }, [loadAccountId]);
+
+  // Lê e monitora parâmetros da URL
+  useEffect(() => {
+    // Função para atualizar os parâmetros da URL
+    const updateUrlParams = () => {
+      try {
+        const newId = getTransactionIdFromUrl();
+        const newView = getViewParamFromUrl();
+        setTransactionId(newId);
+        setView(newView);
+      } catch (error) {
+        console.error("Erro ao ler parâmetros da URL:", error);
+      }
     };
     
-    window.addEventListener("popstate", handleLocationChange);
+    // Verifica imediatamente na inicialização
+    updateUrlParams();
+    
+    // Também verifica após um pequeno delay para garantir que a URL está disponível
+    // Isso é útil após reloads de página
+    const timeoutId = setTimeout(updateUrlParams, 100);
+    
+    // Escuta mudanças na URL via popstate (navegação do browser)
+    const handlePopState = () => {
+      updateUrlParams();
+    };
+    
+    // Escuta eventos do Single-SPA quando a rota muda
+    const handleSingleSpaRouteChange = () => {
+      // Pequeno delay para garantir que a URL foi atualizada
+      setTimeout(updateUrlParams, 0);
+    };
+    
+    // Escuta mudanças de hash (caso seja usado)
+    const handleHashChange = () => {
+      updateUrlParams();
+    };
+    
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", handleHashChange);
+    window.addEventListener("single-spa:routing-event", handleSingleSpaRouteChange);
     
     return () => {
-      window.removeEventListener("popstate", handleLocationChange);
+      clearTimeout(timeoutId);
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handleHashChange);
+      window.removeEventListener("single-spa:routing-event", handleSingleSpaRouteChange);
     };
-  }, [loadAccountId]);
+  }, []);
 
   const handleRefresh = useCallback(() => {
     loadAccountId();
@@ -62,6 +90,18 @@ export default function Root(_props: RootProps) {
       window.history.replaceState({}, "", url.toString());
       setView(null);
       setTransactionId(null);
+    }
+  }, []);
+
+  const handleEditFromDetails = useCallback((id: string) => {
+    // Remove o parâmetro 'view' e mantém o 'id' para entrar em modo de edição
+    if (window.history) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("view");
+      url.searchParams.set("id", id);
+      window.history.replaceState({}, "", url.toString());
+      setView(null);
+      setTransactionId(id);
     }
   }, []);
 
@@ -105,7 +145,11 @@ export default function Root(_props: RootProps) {
   if (view === "details" && transactionId) {
     return (
       <div className={styles.container}>
-        <TransactionDetails transactionId={transactionId} onBack={handleBackFromDetails} />
+        <TransactionDetails 
+          transactionId={transactionId} 
+          onBack={handleBackFromDetails}
+          onEdit={handleEditFromDetails}
+        />
       </div>
     );
   }

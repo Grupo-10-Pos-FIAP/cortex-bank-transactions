@@ -7,6 +7,7 @@ import { getTransaction as fetchTransaction } from "@/api/transactions.api";
 import TransactionForm from "@/components/TransactionForm";
 import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
+import SuccessModal from "@/components/SuccessModal";
 import styles from "./Transactions.module.css";
 
 interface TransactionsProps {
@@ -15,9 +16,14 @@ interface TransactionsProps {
   transaction?: Transaction | null;
 }
 
+type SuccessModalType = "update" | "delete" | null;
+
 function Transactions({ accountId, transactionId, transaction: initialTransaction }: TransactionsProps) {
   const [transaction, setTransaction] = useState<Transaction | null>(initialTransaction || null);
   const [successMessage, setSuccessMessage] = useState<string>("");
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [successModalType, setSuccessModalType] = useState<SuccessModalType>(null);
+  const [updatedTransactionId, setUpdatedTransactionId] = useState<string | null>(null);
   const [formKey, setFormKey] = useState<number>(0);
   const [loadingTransaction, setLoadingTransaction] = useState<boolean>(false);
   const [loadError, setLoadError] = useState<Error | null>(null);
@@ -99,20 +105,53 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
           urlAnexo: data.urlAnexo,
         });
         
-        // Mostra mensagem de sucesso
-        setSuccessMessage("Transação atualizada com sucesso!");
+        // Armazena o ID da transação atualizada e mostra o modal
+        setUpdatedTransactionId(updatedTransaction.id || idToUse);
+        setSuccessModalType("update");
+        setShowSuccessModal(true);
         setTransaction(updatedTransaction);
-        
-        // Limpa mensagem após delay
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 3000);
       } catch (error) {
         // Error is handled by the hook
       }
     },
     [transactionId, urlTransactionId, transactionHook]
   );
+
+  const handleSuccessModalConfirm = useCallback(() => {
+    setShowSuccessModal(false);
+    
+    if (successModalType === "update" && updatedTransactionId) {
+      // Navega para a tela de detalhes da transação
+      if (window.history) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("view", "details");
+        url.searchParams.set("id", updatedTransactionId);
+        window.history.replaceState({}, "", url.toString());
+        
+        // Força atualização do componente root através de um pequeno delay
+        // O useEffect do root component vai detectar a mudança na URL
+        setTimeout(() => {
+          window.dispatchEvent(new PopStateEvent("popstate"));
+        }, 0);
+      }
+    } else if (successModalType === "delete") {
+      // Volta para a lista de transações (remove parâmetros da URL)
+      if (window.history) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("view");
+        url.searchParams.delete("id");
+        window.history.replaceState({}, "", url.toString());
+        
+        // Força atualização do componente root
+        setTimeout(() => {
+          window.dispatchEvent(new PopStateEvent("popstate"));
+        }, 0);
+      }
+    }
+    
+    setSuccessModalType(null);
+    setUpdatedTransactionId(null);
+  }, [successModalType, updatedTransactionId]);
 
   const handleDelete = useCallback(
     async (id: string) => {
@@ -130,13 +169,9 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
           window.history.replaceState({}, "", url.toString());
         }
         
-        // Mostra mensagem de sucesso
-        setSuccessMessage("Transação excluída com sucesso!");
-        
-        // Limpa mensagem após delay
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 3000);
+        // Mostra modal de sucesso para exclusão
+        setSuccessModalType("delete");
+        setShowSuccessModal(true);
       } catch (error) {
         // Error is handled by the hook
       }
@@ -227,36 +262,53 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
     );
   }
 
+  const getSuccessModalMessage = () => {
+    if (successModalType === "update") {
+      return "Transação atualizada com sucesso!";
+    }
+    if (successModalType === "delete") {
+      return "Transação excluída com sucesso!";
+    }
+    return "";
+  };
+
   return (
-    <div className={styles.transactions}>
-      <Card title={isEditMode ? "Editar Transação" : "Nova Transação"} variant="elevated" color="base" className={styles.card}>
-        <Card.Section className={styles.formSection}>
-          {successMessage && (
-            <SuccessMessage
-              message={successMessage}
-              onDismiss={() => setSuccessMessage("")}
+    <>
+      <SuccessModal
+        message={getSuccessModalMessage()}
+        onConfirm={handleSuccessModalConfirm}
+        visible={showSuccessModal}
+      />
+      <div className={styles.transactions}>
+        <Card title={isEditMode ? "Editar Transação" : "Nova Transação"} variant="elevated" color="base" className={styles.card}>
+          <Card.Section className={styles.formSection}>
+            {successMessage && (
+              <SuccessMessage
+                message={successMessage}
+                onDismiss={() => setSuccessMessage("")}
+              />
+            )}
+            {transactionHook.error && (
+              <ErrorMessage
+                error={transactionHook.error}
+                title={isEditMode ? "Erro ao atualizar transação" : "Erro ao criar transação"}
+                className={styles.errorMessage}
+              />
+            )}
+            <TransactionForm
+              key={formKey}
+              transaction={transaction || undefined}
+              accountId={accountId}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+              onDelete={isEditMode ? handleDelete : undefined}
+              loading={transactionHook.loading}
+              isEditMode={isEditMode}
             />
-          )}
-          {transactionHook.error && (
-            <ErrorMessage
-              error={transactionHook.error}
-              title={isEditMode ? "Erro ao atualizar transação" : "Erro ao criar transação"}
-              className={styles.errorMessage}
-            />
-          )}
-          <TransactionForm
-            key={formKey}
-            transaction={transaction || undefined}
-            accountId={accountId}
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-            onDelete={isEditMode ? handleDelete : undefined}
-            loading={transactionHook.loading}
-            isEditMode={isEditMode}
-          />
-        </Card.Section>
-      </Card>
-    </div>
+          </Card.Section>
+        </Card>
+      </div>
+    </>
   );
 }
 
