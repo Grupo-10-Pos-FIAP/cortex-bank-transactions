@@ -5,6 +5,7 @@ import { getTransactionIdFromUrl, getViewParamFromUrl } from "@/utils/urlParams"
 import Transactions from "../Transactions";
 import TransactionDetails from "../components/TransactionDetails";
 import styles from "./root.component.module.css";
+import "../styles/tokens.css";
 
 export interface RootProps {
   name?: string;

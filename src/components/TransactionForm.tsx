@@ -1,8 +1,18 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Button, Input, Dropdown, Text } from "@grupo10-pos-fiap/design-system";
+import {
+  Button,
+  Input,
+  Dropdown,
+  Text,
+  Icon,
+} from "@grupo10-pos-fiap/design-system";
 import { Transaction, TransactionFormData } from "@/types/transactions";
 import { uploadFile, validateFile } from "@/utils/fileUpload";
-import { applyCurrencyMask, parseCurrency, formatCurrency } from "@/utils/currencyMask";
+import {
+  applyCurrencyMask,
+  parseCurrency,
+  formatCurrency,
+} from "@/utils/currencyMask";
 import styles from "./TransactionForm.module.css";
 
 interface TransactionFormProps {
@@ -34,7 +44,8 @@ function TransactionForm({
   loading = false,
   isEditMode = false,
 }: TransactionFormProps) {
-  const [formData, setFormData] = useState<TransactionFormData>(initialFormData);
+  const [formData, setFormData] =
+    useState<TransactionFormData>(initialFormData);
   const [fileError, setFileError] = useState<string>("");
   const [uploadingFile, setUploadingFile] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -99,7 +110,9 @@ function TransactionForm({
         handleInputChange("anexo", result.fileName);
       } catch (error) {
         setFileError(
-          error instanceof Error ? error.message : "Erro ao fazer upload do arquivo"
+          error instanceof Error
+            ? error.message
+            : "Erro ao fazer upload do arquivo"
         );
         setSelectedFile(null);
       } finally {
@@ -180,7 +193,9 @@ function TransactionForm({
               },
             ]}
             placeholder={formData.type === "Debit" ? "Débito" : "Crédito"}
-            onValueChange={(value) => handleInputChange("type", value as "Debit" | "Credit")}
+            onValueChange={(value) =>
+              handleInputChange("type", value as "Debit" | "Credit")
+            }
             width="100%"
           />
         </div>
@@ -196,6 +211,7 @@ function TransactionForm({
             placeholder="0,00"
             disabled={loading}
             required
+            width="100%"
           />
         </div>
       </div>
@@ -211,6 +227,7 @@ function TransactionForm({
             onChange={(e) => handleInputChange("from", e.target.value)}
             placeholder="Nome ou identificador"
             disabled={loading}
+            width="100%"
           />
         </div>
 
@@ -224,49 +241,56 @@ function TransactionForm({
             onChange={(e) => handleInputChange("to", e.target.value)}
             placeholder="Nome ou identificador"
             disabled={loading}
+            width="100%"
           />
         </div>
       </div>
 
-      <div className={styles.formField}>
-        <Text variant="body" weight="medium" className={styles.label}>
-          Anexo
-        </Text>
-        <div className={styles.fileUpload}>
-          <input
-            type="file"
-            id="file-upload"
-            onChange={handleFileChange}
-            disabled={loading || uploadingFile}
-            className={styles.fileInput}
-            accept="image/*,.pdf,.doc,.docx"
-          />
-          <label htmlFor="file-upload" className={styles.fileLabel}>
+      <div className={styles.formRow}>
+        <div className={styles.formField}>
+          <Text variant="body" weight="medium" className={styles.label}>
+            Anexo
+          </Text>
+          <div
+            className={styles.fileInputWrapper}
+            onClick={() =>
+              !loading &&
+              !uploadingFile &&
+              document.getElementById("file-upload")?.click()
+            }
+          >
             {uploadingFile ? (
-              <>
-                <span>Enviando...</span>
-              </>
-            ) : selectedFile || formData.anexo ? (
-              <>
-                <span>{selectedFile?.name || formData.anexo}</span>
-              </>
+              <span className={styles.fileInputText}>Enviando...</span>
+            ) : selectedFile?.name || formData.anexo ? (
+              <span className={styles.fileInputText}>
+                {selectedFile?.name || formData.anexo}
+              </span>
             ) : (
-              <>
-                <span>Selecionar arquivo</span>
-              </>
+              <div className={styles.fileInputPlaceholder}>
+                <Icon color='gray500' name="FileUp" />
+                <span className={styles.fileInputText}>Selecionar arquivo</span>
+              </div>
             )}
-          </label>
+            <input
+              type="file"
+              id="file-upload"
+              onChange={handleFileChange}
+              disabled={loading || uploadingFile}
+              className={styles.fileInput}
+              accept="image/*,.pdf,.doc,.docx"
+            />
+          </div>
+          {fileError && (
+            <Text variant="caption" color="error" className={styles.errorText}>
+              {fileError}
+            </Text>
+          )}
+          {formData.anexo && !fileError && (
+            <Text variant="caption" color="gray600" className={styles.fileInfo}>
+              Arquivo: {formData.anexo}
+            </Text>
+          )}
         </div>
-        {fileError && (
-          <Text variant="caption" color="error" className={styles.errorText}>
-            {fileError}
-          </Text>
-        )}
-        {formData.anexo && !fileError && (
-          <Text variant="caption" color="gray600" className={styles.fileInfo}>
-            Arquivo: {formData.anexo}
-          </Text>
-        )}
       </div>
 
       <div className={styles.formActions}>
@@ -276,7 +300,7 @@ function TransactionForm({
             variant="negative"
             onClick={handleDelete}
             disabled={loading || deleting || uploadingFile}
-            width="auto"
+            width="90px"
           >
             {deleting ? "Excluindo..." : "Excluir"}
           </Button>
@@ -287,7 +311,7 @@ function TransactionForm({
             variant="secondary"
             onClick={onCancel}
             disabled={loading || deleting}
-            width="auto"
+            width="90px"
           >
             Cancelar
           </Button>
@@ -295,7 +319,7 @@ function TransactionForm({
             type="submit"
             variant="primary"
             disabled={loading || uploadingFile || deleting}
-            width="auto"
+            width="90px"
           >
             {loading ? "Salvando..." : isEditMode ? "Atualizar" : "Criar"}
           </Button>
