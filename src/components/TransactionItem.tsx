@@ -89,9 +89,10 @@ function TransactionItem({
             {onEdit && (
               <Button
                 variant="outlined"
+                color="primary"
                 onClick={handleEdit}
                 disabled={loading}
-                width="auto"
+                width="90px"
               >
                 Editar
               </Button>
@@ -101,7 +102,7 @@ function TransactionItem({
                 variant="negative"
                 onClick={handleDelete}
                 disabled={loading}
-                width="auto"
+                width="90px"
               >
                 Excluir
               </Button>

@@ -18,33 +18,46 @@ interface TransactionsProps {
 
 type SuccessModalType = "update" | "delete" | null;
 
-function Transactions({ accountId, transactionId, transaction: initialTransaction }: TransactionsProps) {
-  const [transaction, setTransaction] = useState<Transaction | null>(initialTransaction || null);
+function Transactions({
+  accountId,
+  transactionId,
+  transaction: initialTransaction,
+}: TransactionsProps) {
+  const [transaction, setTransaction] = useState<Transaction | null>(
+    initialTransaction || null
+  );
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
-  const [successModalType, setSuccessModalType] = useState<SuccessModalType>(null);
-  const [updatedTransactionId, setUpdatedTransactionId] = useState<string | null>(null);
+  const [successModalType, setSuccessModalType] =
+    useState<SuccessModalType>(null);
+  const [updatedTransactionId, setUpdatedTransactionId] = useState<
+    string | null
+  >(null);
   const [formKey, setFormKey] = useState<number>(0);
   const [loadingTransaction, setLoadingTransaction] = useState<boolean>(false);
   const [loadError, setLoadError] = useState<Error | null>(null);
   const transactionHook = useTransaction();
   const urlTransactionId = getTransactionIdFromUrl();
   const isEditMode = !!(transactionId || urlTransactionId || transaction);
-  
+
   // Busca a transação quando há ID na URL
   useEffect(() => {
     const idToFetch = urlTransactionId || transactionId;
-    
+
     if (idToFetch && !transaction && !initialTransaction) {
       setLoadingTransaction(true);
       setLoadError(null);
-      
+
       fetchTransaction(idToFetch)
         .then((fetchedTransaction) => {
           setTransaction(fetchedTransaction);
         })
         .catch((error) => {
-          setLoadError(error instanceof Error ? error : new Error("Erro ao carregar transação"));
+          setLoadError(
+            error instanceof Error
+              ? error
+              : new Error("Erro ao carregar transação")
+          );
         })
         .finally(() => {
           setLoadingTransaction(false);
@@ -68,14 +81,14 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
           anexo: data.anexo,
           urlAnexo: data.urlAnexo,
         });
-        
+
         // Limpa o formulário imediatamente
         setTransaction(null);
         setFormKey((prev) => prev + 1); // Força reset do formulário
-        
+
         // Mostra mensagem de sucesso
         setSuccessMessage("Transação criada com sucesso!");
-        
+
         // Limpa mensagem após delay
         setTimeout(() => {
           setSuccessMessage("");
@@ -104,7 +117,7 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
           anexo: data.anexo,
           urlAnexo: data.urlAnexo,
         });
-        
+
         // Armazena o ID da transação atualizada e mostra o modal
         setUpdatedTransactionId(updatedTransaction.id || idToUse);
         setSuccessModalType("update");
@@ -119,7 +132,7 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
 
   const handleSuccessModalConfirm = useCallback(() => {
     setShowSuccessModal(false);
-    
+
     if (successModalType === "update" && updatedTransactionId) {
       // Navega para a tela de detalhes da transação
       if (window.history) {
@@ -127,7 +140,7 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
         url.searchParams.set("view", "details");
         url.searchParams.set("id", updatedTransactionId);
         window.history.replaceState({}, "", url.toString());
-        
+
         // Força atualização do componente root através de um pequeno delay
         // O useEffect do root component vai detectar a mudança na URL
         setTimeout(() => {
@@ -141,14 +154,14 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
         url.searchParams.delete("view");
         url.searchParams.delete("id");
         window.history.replaceState({}, "", url.toString());
-        
+
         // Força atualização do componente root
         setTimeout(() => {
           window.dispatchEvent(new PopStateEvent("popstate"));
         }, 0);
       }
     }
-    
+
     setSuccessModalType(null);
     setUpdatedTransactionId(null);
   }, [successModalType, updatedTransactionId]);
@@ -157,18 +170,18 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
     async (id: string) => {
       try {
         await transactionHook.remove(id);
-        
+
         // Limpa a transação imediatamente
         setTransaction(null);
         setFormKey((prev) => prev + 1); // Força reset do formulário
-        
+
         // Remove o ID da URL imediatamente
         if (urlTransactionId && window.history) {
           const url = new URL(window.location.href);
           url.searchParams.delete("id");
           window.history.replaceState({}, "", url.toString());
         }
-        
+
         // Mostra modal de sucesso para exclusão
         setSuccessModalType("delete");
         setShowSuccessModal(true);
@@ -202,7 +215,7 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
 
   if (!accountId) {
     return (
-      <Card title="Transações" variant="elevated" color="base">
+      <Card title="Transações" variant="elevated" color="white">
         <Card.Section>
           <Text variant="body" color="gray600">
             Conta não encontrada
@@ -216,7 +229,12 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
   if (loadingTransaction) {
     return (
       <div className={styles.transactions}>
-        <Card title="Editar Transação" variant="elevated" color="base" className={styles.card}>
+        <Card
+          title="Editar Transação"
+          variant="elevated"
+          color="white"
+          className={styles.card}
+        >
           <Card.Section className={styles.formSection}>
             <Loading text="Carregando transação..." size="medium" />
           </Card.Section>
@@ -229,7 +247,12 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
   if (loadError && isEditMode) {
     return (
       <div className={styles.transactions}>
-        <Card title="Editar Transação" variant="elevated" color="base" className={styles.card}>
+        <Card
+          title="Editar Transação"
+          variant="elevated"
+          color="white"
+          className={styles.card}
+        >
           <Card.Section className={styles.formSection}>
             <ErrorMessage
               error={{
@@ -248,7 +271,11 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
                       setTransaction(fetchedTransaction);
                     })
                     .catch((error) => {
-                      setLoadError(error instanceof Error ? error : new Error("Erro ao carregar transação"));
+                      setLoadError(
+                        error instanceof Error
+                          ? error
+                          : new Error("Erro ao carregar transação")
+                      );
                     })
                     .finally(() => {
                       setLoadingTransaction(false);
@@ -280,7 +307,12 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
         visible={showSuccessModal}
       />
       <div className={styles.transactions}>
-        <Card title={isEditMode ? "Editar Transação" : "Nova Transação"} variant="elevated" color="base" className={styles.card}>
+        <Card
+          title={isEditMode ? "Editar Transação" : "Nova Transação"}
+          variant="elevated"
+          color="white"
+          className={styles.card}
+        >
           <Card.Section className={styles.formSection}>
             {successMessage && (
               <SuccessMessage
@@ -291,7 +323,11 @@ function Transactions({ accountId, transactionId, transaction: initialTransactio
             {transactionHook.error && (
               <ErrorMessage
                 error={transactionHook.error}
-                title={isEditMode ? "Erro ao atualizar transação" : "Erro ao criar transação"}
+                title={
+                  isEditMode
+                    ? "Erro ao atualizar transação"
+                    : "Erro ao criar transação"
+                }
                 className={styles.errorMessage}
               />
             )}

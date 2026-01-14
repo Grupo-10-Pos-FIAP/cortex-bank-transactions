@@ -29,7 +29,7 @@ function ErrorMessage({
       </Text>
       {onRetry && error.retryable && (
         <div className={styles.errorActions}>
-          <Button variant="primary" onClick={onRetry} width="auto">
+          <Button variant="primary" onClick={onRetry} width="90px">
             Tentar Novamente
           </Button>
         </div>

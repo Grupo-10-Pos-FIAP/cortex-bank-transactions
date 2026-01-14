@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Text, Loading, Button, Card } from "@grupo10-pos-fiap/design-system";
 import { getAccountId } from "@/utils/accountStorage";
-import { getTransactionIdFromUrl, getViewParamFromUrl } from "@/utils/urlParams";
+import {
+  getTransactionIdFromUrl,
+  getViewParamFromUrl,
+} from "@/utils/urlParams";
 import Transactions from "../Transactions";
 import TransactionDetails from "../components/TransactionDetails";
 import styles from "./root.component.module.css";
@@ -42,39 +45,45 @@ export default function Root(_props: RootProps) {
         console.error("Erro ao ler parâmetros da URL:", error);
       }
     };
-    
+
     // Verifica imediatamente na inicialização
     updateUrlParams();
-    
+
     // Também verifica após um pequeno delay para garantir que a URL está disponível
     // Isso é útil após reloads de página
     const timeoutId = setTimeout(updateUrlParams, 100);
-    
+
     // Escuta mudanças na URL via popstate (navegação do browser)
     const handlePopState = () => {
       updateUrlParams();
     };
-    
+
     // Escuta eventos do Single-SPA quando a rota muda
     const handleSingleSpaRouteChange = () => {
       // Pequeno delay para garantir que a URL foi atualizada
       setTimeout(updateUrlParams, 0);
     };
-    
+
     // Escuta mudanças de hash (caso seja usado)
     const handleHashChange = () => {
       updateUrlParams();
     };
-    
+
     window.addEventListener("popstate", handlePopState);
     window.addEventListener("hashchange", handleHashChange);
-    window.addEventListener("single-spa:routing-event", handleSingleSpaRouteChange);
-    
+    window.addEventListener(
+      "single-spa:routing-event",
+      handleSingleSpaRouteChange
+    );
+
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("hashchange", handleHashChange);
-      window.removeEventListener("single-spa:routing-event", handleSingleSpaRouteChange);
+      window.removeEventListener(
+        "single-spa:routing-event",
+        handleSingleSpaRouteChange
+      );
     };
   }, []);
 
@@ -117,7 +126,7 @@ export default function Root(_props: RootProps) {
   if (!accountId) {
     return (
       <div className={styles.container}>
-        <Card title="Transações" variant="elevated" color="base">
+        <Card title="Transações" variant="elevated" color="white">
           <Card.Section>
             <div style={{ textAlign: "center", padding: "var(--spacing-xl)" }}>
               <Text
@@ -128,11 +137,15 @@ export default function Root(_props: RootProps) {
               >
                 Conta não identificada
               </Text>
-              <Text variant="body" color="gray600" style={{ marginBottom: "var(--spacing-lg)" }}>
-                Não foi possível identificar a conta. Por favor, verifique se o accountId está
-                armazenado no localStorage.
+              <Text
+                variant="body"
+                color="gray600"
+                style={{ marginBottom: "var(--spacing-lg)" }}
+              >
+                Não foi possível identificar a conta. Por favor, verifique se o
+                accountId está armazenado no localStorage.
               </Text>
-              <Button variant="primary" onClick={handleRefresh} width="auto">
+              <Button variant="primary" onClick={handleRefresh} width="90px">
                 Atualizar Tela
               </Button>
             </div>
@@ -146,8 +159,8 @@ export default function Root(_props: RootProps) {
   if (view === "details" && transactionId) {
     return (
       <div className={styles.container}>
-        <TransactionDetails 
-          transactionId={transactionId} 
+        <TransactionDetails
+          transactionId={transactionId}
           onBack={handleBackFromDetails}
           onEdit={handleEditFromDetails}
         />
@@ -161,4 +174,3 @@ export default function Root(_props: RootProps) {
     </div>
   );
 }
-

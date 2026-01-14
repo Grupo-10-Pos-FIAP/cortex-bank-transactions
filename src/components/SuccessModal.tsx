@@ -27,7 +27,7 @@ function SuccessModal({ message, onConfirm, visible }: SuccessModalProps) {
             {message}
           </Text>
           <div className={styles.buttonContainer}>
-            <Button variant="primary" onClick={onConfirm} width="auto">
+            <Button variant="primary" onClick={onConfirm} width="90px">
               OK
             </Button>
           </div>

@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Card, Text, Button, Loading, Icon } from "@grupo10-pos-fiap/design-system";
+import {
+  Card,
+  Text,
+  Button,
+  Loading,
+  Icon,
+} from "@grupo10-pos-fiap/design-system";
 import { Transaction } from "@/types/transactions";
 import { getTransaction, deleteTransaction } from "@/api/transactions.api";
 import { formatCurrency } from "@/utils/formatters";
@@ -14,7 +20,11 @@ interface TransactionDetailsProps {
   onEdit?: (id: string) => void;
 }
 
-function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetailsProps) {
+function TransactionDetails({
+  transactionId,
+  onBack,
+  onEdit,
+}: TransactionDetailsProps) {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -31,7 +41,9 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
       const data = await getTransaction(transactionId);
       setTransaction(data);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("Erro ao carregar transação"));
+      setError(
+        err instanceof Error ? err : new Error("Erro ao carregar transação")
+      );
     } finally {
       setLoading(false);
     }
@@ -92,7 +104,7 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
 
   const handleEdit = useCallback(() => {
     if (!transactionId) return;
-    
+
     // Usa o callback do root para atualizar o estado corretamente
     if (onEdit) {
       onEdit(transactionId);
@@ -119,18 +131,20 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
 
     try {
       await deleteTransaction(transactionId);
-      
+
       // Mostra modal de sucesso
       setShowSuccessModal(true);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("Erro ao excluir transação"));
+      setError(
+        err instanceof Error ? err : new Error("Erro ao excluir transação")
+      );
       setDeleting(false);
     }
   }, [transactionId, transaction]);
 
   const handleSuccessModalConfirm = useCallback(() => {
     setShowSuccessModal(false);
-    
+
     // Volta para a lista após excluir
     if (onBack) {
       onBack();
@@ -141,7 +155,7 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
         url.searchParams.delete("view");
         url.searchParams.delete("id");
         window.history.replaceState({}, "", url.toString());
-        
+
         // Força atualização do componente root
         setTimeout(() => {
           window.dispatchEvent(new PopStateEvent("popstate"));
@@ -153,7 +167,12 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
   if (loading) {
     return (
       <div className={styles.container}>
-        <Card title="Detalhes da Transação" variant="elevated" color="base" className={styles.card}>
+        <Card
+          title="Detalhes da Transação"
+          variant="elevated"
+          color="white"
+          className={styles.card}
+        >
           <Card.Section className={styles.section}>
             <Loading text="Carregando transação..." size="medium" />
           </Card.Section>
@@ -165,7 +184,12 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
   if (error) {
     return (
       <div className={styles.container}>
-        <Card title="Detalhes da Transação" variant="elevated" color="base" className={styles.card}>
+        <Card
+          title="Detalhes da Transação"
+          variant="elevated"
+          color="white"
+          className={styles.card}
+        >
           <Card.Section className={styles.section}>
             <ErrorMessage
               error={{
@@ -185,7 +209,12 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
   if (!transaction) {
     return (
       <div className={styles.container}>
-        <Card title="Detalhes da Transação" variant="elevated" color="base" className={styles.card}>
+        <Card
+          title="Detalhes da Transação"
+          variant="elevated"
+          color="white"
+          className={styles.card}
+        >
           <Card.Section className={styles.section}>
             <Text variant="body" color="gray600">
               Transação não encontrada
@@ -206,158 +235,222 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
         visible={showSuccessModal}
       />
       <div className={styles.container}>
-        <Card title="Detalhes da Transação" variant="elevated" color="base" className={styles.card}>
-        <Card.Section className={styles.section}>
-          <div className={styles.headerActions}>
-            {onBack && (
-              <Button variant="secondary" onClick={onBack} width="auto" disabled={deleting}>
-                <Icon name="ArrowLeft" size="small" />
-                Voltar
-              </Button>
-            )}
-            <div className={styles.actionButtons}>
-              <Button
-                variant="outlined"
-                onClick={handleEdit}
-                disabled={deleting || loading}
-                width="auto"
-              >
-                Editar
-              </Button>
-              <Button
-                variant="negative"
-                onClick={handleDelete}
-                disabled={deleting || loading}
-                width="auto"
-              >
-                {deleting ? "Excluindo..." : "Excluir"}
-              </Button>
-            </div>
-          </div>
-
-          <div className={styles.details}>
-            <div className={styles.detailRow}>
-              <div className={styles.detailItem}>
-                <Text variant="caption" color="gray600" className={styles.label}>
-                  ID
-                </Text>
-                <Text variant="body" weight="medium" className={styles.value}>
-                  {transaction.id || "N/A"}
-                </Text>
-              </div>
-
-              <div className={styles.detailItem}>
-                <Text variant="caption" color="gray600" className={styles.label}>
-                  Tipo
-                </Text>
-                <div className={styles.typeBadge}>
-                  <Text
-                    variant="body"
-                    weight="semibold"
-                    color={transaction.type === "Credit" ? "success" : "error"}
-                  >
-                    {transaction.type === "Credit" ? "Crédito" : "Débito"}
-                  </Text>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.detailRow}>
-              <div className={styles.detailItem}>
-                <Text variant="caption" color="gray600" className={styles.label}>
-                  Valor
-                </Text>
-                <Text
-                  variant="title"
-                  weight="bold"
-                  color={transaction.type === "Credit" ? "success" : "error"}
-                  className={styles.value}
+        <Card
+          title="Detalhes da Transação"
+          variant="elevated"
+          color="white"
+          className={styles.card}
+        >
+          <Card.Section className={styles.section}>
+            <div className={styles.headerActions}>
+              {onBack && (
+                <Button
+                  variant="outlined"
+                  onClick={onBack}
+                  width="90px"
+                  disabled={deleting}
                 >
-                  {formatCurrency(transaction.value)}
-                </Text>
+                  <Icon name="ArrowLeft" size="small" />
+                  Voltar
+                </Button>
+              )}
+              <div className={styles.actionButtons}>
+                <Button
+                  variant="outlined"
+                  onClick={handleEdit}
+                  disabled={deleting || loading}
+                  width="90px"
+                >
+                  Editar
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleDelete}
+                  disabled={deleting || loading}
+                  width="90px"
+                >
+                  {deleting ? "Excluindo..." : "Excluir"}
+                </Button>
               </div>
+            </div>
 
-              {transaction.date && (
+            <div className={styles.details}>
+              <div className={styles.detailRow}>
                 <div className={styles.detailItem}>
-                  <Text variant="caption" color="gray600" className={styles.label}>
-                    Data
+                  <Text
+                    variant="caption"
+                    color="gray600"
+                    className={styles.label}
+                  >
+                    ID
                   </Text>
                   <Text variant="body" weight="medium" className={styles.value}>
-                    {formatDate(transaction.date)}
+                    {transaction.id || "N/A"}
+                  </Text>
+                </div>
+
+                <div className={styles.detailItem}>
+                  <Text
+                    variant="caption"
+                    color="gray600"
+                    className={styles.label}
+                  >
+                    Tipo
+                  </Text>
+                  <div className={styles.typeBadge}>
+                    <Text
+                      variant="body"
+                      weight="semibold"
+                      color={
+                        transaction.type === "Credit" ? "success" : "error"
+                      }
+                    >
+                      {transaction.type === "Credit" ? "Crédito" : "Débito"}
+                    </Text>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.detailRow}>
+                <div className={styles.detailItem}>
+                  <Text
+                    variant="caption"
+                    color="gray600"
+                    className={styles.label}
+                  >
+                    Valor
+                  </Text>
+                  <Text
+                    variant="title"
+                    weight="bold"
+                    color={transaction.type === "Credit" ? "success" : "error"}
+                    className={styles.value}
+                  >
+                    {formatCurrency(transaction.value)}
+                  </Text>
+                </div>
+
+                {transaction.date && (
+                  <div className={styles.detailItem}>
+                    <Text
+                      variant="caption"
+                      color="gray600"
+                      className={styles.label}
+                    >
+                      Data
+                    </Text>
+                    <Text
+                      variant="body"
+                      weight="medium"
+                      className={styles.value}
+                    >
+                      {formatDate(transaction.date)}
+                    </Text>
+                  </div>
+                )}
+              </div>
+
+              {(transaction.from || transaction.to) && (
+                <div className={styles.detailRow}>
+                  {transaction.from && (
+                    <div className={styles.detailItem}>
+                      <Text
+                        variant="caption"
+                        color="gray600"
+                        className={styles.label}
+                      >
+                        De
+                      </Text>
+                      <Text
+                        variant="body"
+                        weight="medium"
+                        className={styles.value}
+                      >
+                        {transaction.from}
+                      </Text>
+                    </div>
+                  )}
+
+                  {transaction.to && (
+                    <div className={styles.detailItem}>
+                      <Text
+                        variant="caption"
+                        color="gray600"
+                        className={styles.label}
+                      >
+                        Para
+                      </Text>
+                      <Text
+                        variant="body"
+                        weight="medium"
+                        className={styles.value}
+                      >
+                        {transaction.to}
+                      </Text>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {transaction.accountId && (
+                <div className={styles.detailItem}>
+                  <Text
+                    variant="caption"
+                    color="gray600"
+                    className={styles.label}
+                  >
+                    Conta
+                  </Text>
+                  <Text variant="body" weight="medium" className={styles.value}>
+                    {transaction.accountId}
                   </Text>
                 </div>
               )}
-            </div>
 
-            {(transaction.from || transaction.to) && (
-              <div className={styles.detailRow}>
-                {transaction.from && (
-                  <div className={styles.detailItem}>
-                    <Text variant="caption" color="gray600" className={styles.label}>
-                      De
-                    </Text>
-                    <Text variant="body" weight="medium" className={styles.value}>
-                      {transaction.from}
-                    </Text>
+              {hasAttachment && (
+                <div className={styles.attachmentSection}>
+                  <Text
+                    variant="subtitle"
+                    weight="semibold"
+                    className={styles.attachmentTitle}
+                  >
+                    Anexo
+                  </Text>
+                  <div className={styles.attachmentInfo}>
+                    {transaction.anexo && (
+                      <Text
+                        variant="body"
+                        color="gray600"
+                        className={styles.attachmentName}
+                      >
+                        {transaction.anexo}
+                      </Text>
+                    )}
+                    {transaction.urlAnexo && (
+                      <Button
+                        variant="primary"
+                        onClick={() =>
+                          handleDownload(
+                            transaction.urlAnexo!,
+                            transaction.anexo || "anexo"
+                          )
+                        }
+                        width="160px"
+                        // className={styles.downloadButton}
+                      >
+                        <Icon name="Download" color="white"size="small" />
+                        Baixar Anexo
+                      </Button>
+                    )}
                   </div>
-                )}
-
-                {transaction.to && (
-                  <div className={styles.detailItem}>
-                    <Text variant="caption" color="gray600" className={styles.label}>
-                      Para
-                    </Text>
-                    <Text variant="body" weight="medium" className={styles.value}>
-                      {transaction.to}
-                    </Text>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {transaction.accountId && (
-              <div className={styles.detailItem}>
-                <Text variant="caption" color="gray600" className={styles.label}>
-                  Conta
-                </Text>
-                <Text variant="body" weight="medium" className={styles.value}>
-                  {transaction.accountId}
-                </Text>
-              </div>
-            )}
-
-            {hasAttachment && (
-              <div className={styles.attachmentSection}>
-                <Text variant="subtitle" weight="semibold" className={styles.attachmentTitle}>
-                  Anexo
-                </Text>
-                <div className={styles.attachmentInfo}>
-                  {transaction.anexo && (
-                    <Text variant="body" color="gray600" className={styles.attachmentName}>
-                      {transaction.anexo}
-                    </Text>
-                  )}
-                  {transaction.urlAnexo && (
-                    <Button
-                      variant="primary"
-                      onClick={() => handleDownload(transaction.urlAnexo!, transaction.anexo || "anexo")}
-                      width="auto"
-                      className={styles.downloadButton}
-                    >
-                      <Icon name="Download" size="small" />
-                      Baixar Anexo
-                    </Button>
-                  )}
                 </div>
-              </div>
-            )}
-          </div>
-        </Card.Section>
-      </Card>
-    </div>
+              )}
+            </div>
+          </Card.Section>
+        </Card>
+      </div>
     </>
   );
 }
 
 export default React.memo(TransactionDetails);
-
