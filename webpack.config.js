@@ -1,4 +1,4 @@
-const { merge } = require("webpack-merge");
+const { mergeWithCustomize, customizeArray } = require("webpack-merge");
 const path = require("path");
 const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
@@ -15,7 +15,16 @@ module.exports = (webpackConfigEnv, argv) => {
 
   const PORT = 3003;
 
-  return merge(defaultConfig, {
+  return mergeWithCustomize({
+    customizeArray: customizeArray({
+      plugins: (basePlugins, newPlugins) => {
+        const filteredBasePlugins = basePlugins.filter(
+          (plugin) => !(plugin instanceof webpack.DefinePlugin)
+        );
+        return [...filteredBasePlugins, ...newPlugins];
+      },
+    }),
+  })(defaultConfig, {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "src"),
