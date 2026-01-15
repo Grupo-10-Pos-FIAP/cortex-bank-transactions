@@ -5,6 +5,10 @@ import {
   Button,
   Loading,
   Icon,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
 } from "@grupo10-pos-fiap/design-system";
 import { Transaction } from "@/types/transactions";
 import { getTransaction, deleteTransaction } from "@/api/transactions.api";
@@ -30,6 +34,7 @@ function TransactionDetails({
   const [error, setError] = useState<Error | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const loadTransaction = useCallback(async () => {
     if (!transactionId) return;
@@ -130,28 +135,30 @@ function TransactionDetails({
     }
   }, [transactionId, onEdit]);
 
-  const handleDelete = useCallback(async () => {
+  const handleDelete = useCallback(() => {
     if (!transactionId || !transaction) return;
+    setShowDeleteDialog(true);
+  }, [transactionId, transaction]);
 
-    if (!window.confirm("Tem certeza que deseja excluir esta transação?")) {
-      return;
-    }
-
+  const handleConfirmDelete = useCallback(async () => {
     setDeleting(true);
     setError(null);
-
     try {
       await deleteTransaction(transactionId);
-
-      // Mostra modal de sucesso
       setShowSuccessModal(true);
+      setShowDeleteDialog(false);
     } catch (err) {
       setError(
         err instanceof Error ? err : new Error("Erro ao excluir transação")
       );
       setDeleting(false);
+      setShowDeleteDialog(false);
     }
-  }, [transactionId, transaction]);
+  }, [transactionId]);
+
+  const handleCancelDelete = useCallback(() => {
+    setShowDeleteDialog(false);
+  }, []);
 
   const handleSuccessModalConfirm = useCallback(() => {
     setShowSuccessModal(false);
@@ -227,6 +234,45 @@ function TransactionDetails({
 
   return (
     <>
+      <Dialog
+        isOpen={showDeleteDialog}
+        onClose={handleCancelDelete}
+        position="center"
+        size="medium"
+        contentAlign="center"
+        overlay={true}
+        overlayOpacity={0.25}
+        closeOnOverlayClick={true}
+      >
+        <DialogHeader>
+          <h3 style={{ margin: 0, marginBottom: 4 }}>Excluir transação</h3>
+        </DialogHeader>
+        <DialogBody>
+          <p style={{ margin: 0, marginBottom: 4 }}>
+            Ao optar por excluir sua transação, ela vai ser cancelada e deletada
+            do seu histórico de transferências.
+          </p>
+        </DialogBody>
+        <DialogFooter align="end">
+          <div style={{ display: "flex", gap: 12 }}>
+            <Button
+              variant="outlined"
+              onClick={handleCancelDelete}
+              disabled={deleting}
+              width="120px">
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleConfirmDelete}
+              color="error"
+              disabled={deleting}
+              width="120px"
+            >
+              {deleting ? "Excluindo..." : "Confirmar"}
+            </Button>
+          </div>
+        </DialogFooter>
+      </Dialog>
       <SuccessModal
         message="Transação excluída com sucesso!"
         onConfirm={handleSuccessModalConfirm}
