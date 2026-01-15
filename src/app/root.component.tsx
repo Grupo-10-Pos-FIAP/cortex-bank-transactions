@@ -131,7 +131,7 @@ export default function Root(_props: RootProps) {
     }
   }, []);
 
-  const handleEditFromDetails = useCallback((id: string) => {\
+  const handleEditFromDetails = useCallback((id: string) => {
     if (window.history) {
       const url = new URL(window.location.href);
       url.searchParams.delete("view");
