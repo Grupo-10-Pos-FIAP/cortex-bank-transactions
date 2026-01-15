@@ -7,8 +7,15 @@
 
 .card {
   margin-top: 0;
+  padding: var(--spacing-lg);
   background-color: white !important;
   position: relative;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: var(--spacing-md);
+  }
 }
 
 .card :global(.card-header),
@@ -52,13 +59,25 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.footerActions button:first-child {
+.actionButtonContent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  white-space: nowrap;
+}
+
+.actionButtonWrapper {
+  width: auto;
+  display: inline-block;
+}
+
+.footerActions .actionButtonWrapper:first-child button {
   background-color: var(--color-error, #dc3545) !important;
   border-color: var(--color-error, #dc3545) !important;
   color: white !important;
 }
 
-.footerActions button:first-child:hover:not(:disabled) {
+.footerActions .actionButtonWrapper:first-child button:hover:not(:disabled) {
   background-color: var(--color-error-dark, #c82333) !important;
   border-color: var(--color-error-dark, #c82333) !important;
 }
@@ -133,6 +152,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   align-items: flex-start;
+  width: 100%;
 }
 
 .attachmentName {
@@ -146,12 +166,34 @@
 }
 
 @media (max-width: 768px) {
+  .backButtonWrapper {
+    display: none !important;
+  }
+
+  .card :global(.card-header),
+  .card :global([class*="header"]) {
+    padding-right: var(--spacing-lg) !important;
+  }
+
   .detailRow {
     grid-template-columns: 1fr;
   }
 
   .attachmentInfo {
     align-items: stretch;
+  }
+
+  .attachmentInfo .actionButtonWrapper {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .attachmentInfo .actionButtonWrapper > *,
+  .attachmentInfo .actionButtonWrapper :global(button) {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .downloadButton {
@@ -172,6 +214,25 @@
   .footerActions {
     flex-direction: column;
     align-items: stretch;
+    justify-content: stretch !important;
+  }
+
+  .actionButtonWrapper {
+    width: 100% !important;
+    display: block !important;
+    flex: 1 1 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .actionButtonWrapper > *,
+  .actionButtonWrapper :global(button),
+  .actionButtonWrapper :global([role="button"]),
+  .actionButtonWrapper :global([data-testid="button"]) {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .footerActions button {

@@ -404,20 +404,22 @@ function TransactionDetails({
                       </Text>
                     )}
                     {transaction.urlAnexo && (
-                      <Button
-                        variant="outlined"
-                        onClick={() =>
-                          handleDownload(
-                            transaction.urlAnexo!,
-                            transaction.anexo || "anexo"
-                          )
-                        }
-                        width="160px"
-                        // className={styles.downloadButton}
-                      >
-                        <Icon name="Download" size="small" />
-                        Baixar Anexo
-                      </Button>
+                      <div className={styles.actionButtonWrapper}>
+                        <Button
+                          variant="outlined"
+                          onClick={() =>
+                            handleDownload(
+                              transaction.urlAnexo!,
+                              transaction.anexo || "anexo"
+                            )
+                          }
+                        >
+                          <span className={styles.actionButtonContent}>
+                            <Icon name="Download" size="small" />
+                            Baixar Anexo
+                          </span>
+                        </Button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -425,25 +427,31 @@ function TransactionDetails({
             </div>
 
             <div className={styles.footerActions}>
-              <Button
-                variant="primary"
-                color="error"
-                onClick={handleDelete}
-                disabled={deleting || loading}
-                width="90px"
-              >
-                <Icon name="Trash" size="small" color="white" />
-                {deleting ? "Excluindo..." : "Excluir"}
-              </Button>
-              <Button
-                variant="primary"
-                onClick={handleEdit}
-                disabled={deleting || loading}
-                width="90px"
-              >
-                <Icon name="Pencil" size="small" color="white" />
-                Editar
-              </Button>
+              <div className={styles.actionButtonWrapper}>
+                <Button
+                  variant="primary"
+                  color="error"
+                  onClick={handleDelete}
+                  disabled={deleting || loading}
+                >
+                  <span className={styles.actionButtonContent}>
+                    <Icon name="Trash" size="small" color="white" />
+                    {deleting ? "Excluindo..." : "Excluir"}
+                  </span>
+                </Button>
+              </div>
+              <div className={styles.actionButtonWrapper}>
+                <Button
+                  variant="primary"
+                  onClick={handleEdit}
+                  disabled={deleting || loading}
+                >
+                  <span className={styles.actionButtonContent}>
+                    <Icon name="Pencil" size="small" color="white" />
+                    Editar
+                  </span>
+                </Button>
+              </div>
             </div>
           </Card.Section>
         </Card>
