@@ -27,14 +27,50 @@ export default function Root(_props: RootProps) {
     setLoadingAccount(false);
   }, []);
 
-  // Carrega accountId na inicialização
   useEffect(() => {
     loadAccountId();
   }, [loadAccountId]);
 
-  // Lê e monitora parâmetros da URL
   useEffect(() => {
-    // Função para atualizar os parâmetros da URL
+    const handleAccountIdChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{ accountId: string }>;
+      const newAccountId = customEvent.detail?.accountId || getAccountId();
+      if (newAccountId) {
+        setAccountId((currentId) => {
+          if (currentId !== newAccountId) {
+            setLoadingAccount(false);
+            return newAccountId;
+          }
+          return currentId;
+        });
+      }
+    };
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "accountId") {
+        const newAccountId = e.newValue || getAccountId();
+        if (newAccountId) {
+          setAccountId((currentId) => {
+            if (currentId !== newAccountId) {
+              setLoadingAccount(false);
+              return newAccountId;
+            }
+            return currentId;
+          });
+        }
+      }
+    };
+
+    window.addEventListener("accountIdChanged", handleAccountIdChange);
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("accountIdChanged", handleAccountIdChange);
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  useEffect(() => {
     const updateUrlParams = () => {
       try {
         const newId = getTransactionIdFromUrl();
@@ -46,25 +82,18 @@ export default function Root(_props: RootProps) {
       }
     };
 
-    // Verifica imediatamente na inicialização
     updateUrlParams();
 
-    // Também verifica após um pequeno delay para garantir que a URL está disponível
-    // Isso é útil após reloads de página
     const timeoutId = setTimeout(updateUrlParams, 100);
 
-    // Escuta mudanças na URL via popstate (navegação do browser)
     const handlePopState = () => {
       updateUrlParams();
     };
 
-    // Escuta eventos do Single-SPA quando a rota muda
     const handleSingleSpaRouteChange = () => {
-      // Pequeno delay para garantir que a URL foi atualizada
       setTimeout(updateUrlParams, 0);
     };
 
-    // Escuta mudanças de hash (caso seja usado)
     const handleHashChange = () => {
       updateUrlParams();
     };
@@ -92,7 +121,6 @@ export default function Root(_props: RootProps) {
   }, [loadAccountId]);
 
   const handleBackFromDetails = useCallback(() => {
-    // Remove os parâmetros da URL
     if (window.history) {
       const url = new URL(window.location.href);
       url.searchParams.delete("view");
@@ -103,8 +131,7 @@ export default function Root(_props: RootProps) {
     }
   }, []);
 
-  const handleEditFromDetails = useCallback((id: string) => {
-    // Remove o parâmetro 'view' e mantém o 'id' para entrar em modo de edição
+  const handleEditFromDetails = useCallback((id: string) => {\
     if (window.history) {
       const url = new URL(window.location.href);
       url.searchParams.delete("view");
