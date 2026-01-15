@@ -296,38 +296,47 @@ function TransactionForm({
       <div className={styles.formActions}>
         {isEditMode && (
           <div className={styles.editActions}>
-            <Button
-              type="button"
-              variant="outlined"
-              onClick={onCancel}
-              disabled={loading || deleting}
-              width="90px"
-            >
-              <Icon name="ArrowLeft" size="small" />
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={loading || uploadingFile || deleting}
-              width="90px"
-            >
-              <Icon name="Check" size="small" color="white" />
-              {loading ? "Salvando..." : "Salvar"}
-            </Button>
+            <div className={styles.actionButtonWrapper}>
+              <Button
+                type="button"
+                variant="outlined"
+                onClick={onCancel}
+                disabled={loading || deleting}
+              >
+                <span className={styles.actionButtonContent}>
+                  <Icon name="ArrowLeft" size="small" />
+                  Cancelar
+                </span>
+              </Button>
+            </div>
+            <div className={styles.actionButtonWrapper}>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={loading || uploadingFile || deleting}
+              >
+                <span className={styles.actionButtonContent}>
+                  <Icon name="Check" size="small" color="white" />
+                  {loading ? "Salvando..." : "Salvar"}
+                </span>
+              </Button>
+            </div>
           </div>
         )}
         {!isEditMode && (
           <div className={styles.editActions}>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={loading || uploadingFile || deleting}
-              width="90px"
-            >
-              <Icon name="Check" size="small" color="white" />
-              {loading ? "Salvando..." : "Criar"}
-            </Button>
+            <div className={styles.actionButtonWrapper}>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={loading || uploadingFile || deleting}
+              >
+                <span className={styles.actionButtonContent}>
+                  <Icon name="Check" size="small" color="white" />
+                  {loading ? "Salvando..." : "Criar"}
+                </span>
+              </Button>
+            </div>
           </div>
         )}
       </div>
