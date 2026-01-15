@@ -7,7 +7,14 @@
 
 .card {
   margin-top: 0;
+  padding: var(--spacing-lg);
   background-color: white !important;
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: var(--spacing-md);
+  }
 }
 
 .headerSection {
