@@ -193,14 +193,27 @@ function Transactions({
   );
 
   const handleCancel = useCallback(() => {
-    setTransaction(null);
-    // Remove o ID da URL se estiver em modo de edição
-    if (urlTransactionId && window.history) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("id");
-      window.history.replaceState({}, "", url.toString());
+    if (isEditMode && urlTransactionId) {
+      // Em modo de edição, redireciona para a tela de detalhes
+      if (window.history) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("id");
+        url.searchParams.set("view", "details");
+        url.searchParams.set("id", urlTransactionId);
+        window.history.replaceState({}, "", url.toString());
+        
+        // Força atualização do componente root
+        setTimeout(() => {
+          window.dispatchEvent(new PopStateEvent("popstate"));
+        }, 0);
+      }
+    } else {
+      // Em modo de criação, redireciona para /statement
+      if (window.location) {
+        window.location.href = "/statement";
+      }
     }
-  }, [urlTransactionId]);
+  }, [isEditMode, urlTransactionId]);
 
   const handleSubmit = useCallback(
     async (data: Transaction) => {

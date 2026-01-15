@@ -121,13 +121,8 @@ export default function Root(_props: RootProps) {
   }, [loadAccountId]);
 
   const handleBackFromDetails = useCallback(() => {
-    if (window.history) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("view");
-      url.searchParams.delete("id");
-      window.history.replaceState({}, "", url.toString());
-      setView(null);
-      setTransactionId(null);
+    if (window.location) {
+      window.location.href = "/statement";
     }
   }, []);
 
