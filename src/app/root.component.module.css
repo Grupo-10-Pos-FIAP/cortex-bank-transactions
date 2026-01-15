@@ -22,6 +22,8 @@
 @media (max-width: 768px) {
   .container {
     padding: var(--spacing-md);
+    padding-bottom: calc(var(--spacing-2xl) + env(safe-area-inset-bottom, 0px));
+    margin-bottom: var(--spacing-xl);
   }
 }
 
