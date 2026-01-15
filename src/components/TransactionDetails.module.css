@@ -8,25 +8,67 @@
 .card {
   margin-top: 0;
   background-color: white !important;
+  position: relative;
+}
+
+.card :global(.card-header),
+.card :global([class*="header"]) {
+  border-bottom: none !important;
+  position: relative;
+  padding-right: 120px !important;
+}
+
+.backButtonWrapper {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-lg);
+  z-index: 1;
 }
 
 .section {
   padding: var(--spacing-md) 0;
+  border-top: none !important;
+}
+
+.card :global(.card-section) {
+  border-top: none !important;
 }
 
 .headerActions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: var(--spacing-lg);
   gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
-.actionButtons {
+.footerActions {
   display: flex;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md);
   align-items: center;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.footerActions button:first-child {
+  background-color: var(--color-error, #dc3545) !important;
+  border-color: var(--color-error, #dc3545) !important;
+  color: white !important;
+}
+
+.footerActions button:first-child:hover:not(:disabled) {
+  background-color: var(--color-error-dark, #c82333) !important;
+  border-color: var(--color-error-dark, #c82333) !important;
+}
+
+.footerActions button {
+  gap: var(--spacing-xs) !important;
+}
+
+.footerActions button :global(svg) {
+  margin-right: var(--spacing-xs) !important;
 }
 
 .backButton {
@@ -76,7 +118,7 @@
   flex-direction: column;
   gap: var(--spacing-md);
   padding: var(--spacing-md);
-  border: 1px solid var(--color-border-default);
+  border: none;
   border-radius: var(--radius-md);
   background-color: var(--color-background-subtle);
   margin-top: var(--spacing-md);
@@ -116,18 +158,24 @@
     width: 100%;
   }
 
+  .cardHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+
   .headerActions {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .actionButtons {
-    width: 100%;
-    justify-content: stretch;
+  .footerActions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .actionButtons button {
-    flex: 1;
+  .footerActions button {
+    width: 100%;
   }
 }
 

@@ -102,6 +102,17 @@ function TransactionDetails({
     }
   }, []);
 
+  const handleBack = useCallback(() => {
+    if (onBack) {
+      onBack();
+    } else {
+      // Fallback: redireciona para /statement
+      if (window.location) {
+        window.location.href = "/statement";
+      }
+    }
+  }, [onBack]);
+
   const handleEdit = useCallback(() => {
     if (!transactionId) return;
 
@@ -145,24 +156,11 @@ function TransactionDetails({
   const handleSuccessModalConfirm = useCallback(() => {
     setShowSuccessModal(false);
 
-    // Volta para a lista após excluir
-    if (onBack) {
-      onBack();
-    } else {
-      // Se não houver callback, remove os parâmetros da URL
-      if (window.history) {
-        const url = new URL(window.location.href);
-        url.searchParams.delete("view");
-        url.searchParams.delete("id");
-        window.history.replaceState({}, "", url.toString());
-
-        // Força atualização do componente root
-        setTimeout(() => {
-          window.dispatchEvent(new PopStateEvent("popstate"));
-        }, 0);
-      }
+    // Volta para /statement após excluir
+    if (window.location) {
+      window.location.href = "/statement";
     }
-  }, [onBack]);
+  }, []);
 
   if (loading) {
     return (
@@ -241,39 +239,18 @@ function TransactionDetails({
           color="white"
           className={styles.card}
         >
+          <div className={styles.backButtonWrapper}>
+            <Button
+              variant="outlined"
+              onClick={handleBack}
+              width="90px"
+              disabled={deleting}
+            >
+              <Icon name="ArrowLeft" size="small" />
+              Voltar
+            </Button>
+          </div>
           <Card.Section className={styles.section}>
-            <div className={styles.headerActions}>
-              {onBack && (
-                <Button
-                  variant="outlined"
-                  onClick={onBack}
-                  width="90px"
-                  disabled={deleting}
-                >
-                  <Icon name="ArrowLeft" size="small" />
-                  Voltar
-                </Button>
-              )}
-              <div className={styles.actionButtons}>
-                <Button
-                  variant="outlined"
-                  onClick={handleEdit}
-                  disabled={deleting || loading}
-                  width="90px"
-                >
-                  Editar
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleDelete}
-                  disabled={deleting || loading}
-                  width="90px"
-                >
-                  {deleting ? "Excluindo..." : "Excluir"}
-                </Button>
-              </div>
-            </div>
-
             <div className={styles.details}>
               <div className={styles.detailRow}>
                 <div className={styles.detailItem}>
@@ -428,7 +405,7 @@ function TransactionDetails({
                     )}
                     {transaction.urlAnexo && (
                       <Button
-                        variant="primary"
+                        variant="outlined"
                         onClick={() =>
                           handleDownload(
                             transaction.urlAnexo!,
@@ -438,13 +415,35 @@ function TransactionDetails({
                         width="160px"
                         // className={styles.downloadButton}
                       >
-                        <Icon name="Download" color="white"size="small" />
+                        <Icon name="Download" size="small" />
                         Baixar Anexo
                       </Button>
                     )}
                   </div>
                 </div>
               )}
+            </div>
+
+            <div className={styles.footerActions}>
+              <Button
+                variant="primary"
+                color="error"
+                onClick={handleDelete}
+                disabled={deleting || loading}
+                width="90px"
+              >
+                <Icon name="Trash" size="small" color="white" />
+                {deleting ? "Excluindo..." : "Excluir"}
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleEdit}
+                disabled={deleting || loading}
+                width="90px"
+              >
+                <Icon name="Pencil" size="small" color="white" />
+                Editar
+              </Button>
             </div>
           </Card.Section>
         </Card>
