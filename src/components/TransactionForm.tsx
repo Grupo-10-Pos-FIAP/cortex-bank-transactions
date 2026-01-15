@@ -294,36 +294,42 @@ function TransactionForm({
       </div>
 
       <div className={styles.formActions}>
-        {isEditMode && onDelete && (
-          <Button
-            type="button"
-            variant="negative"
-            onClick={handleDelete}
-            disabled={loading || deleting || uploadingFile}
-            width="90px"
-          >
-            {deleting ? "Excluindo..." : "Excluir"}
-          </Button>
+        {isEditMode && (
+          <div className={styles.editActions}>
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={onCancel}
+              disabled={loading || deleting}
+              width="90px"
+            >
+              <Icon name="ArrowLeft" size="small" />
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={loading || uploadingFile || deleting}
+              width="90px"
+            >
+              <Icon name="Check" size="small" color="white" />
+              {loading ? "Salvando..." : "Salvar"}
+            </Button>
+          </div>
         )}
-        <div className={styles.formActionsRight}>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={onCancel}
-            disabled={loading || deleting}
-            width="90px"
-          >
-            Cancelar
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={loading || uploadingFile || deleting}
-            width="90px"
-          >
-            {loading ? "Salvando..." : isEditMode ? "Atualizar" : "Criar"}
-          </Button>
-        </div>
+        {!isEditMode && (
+          <div className={styles.editActions}>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={loading || uploadingFile || deleting}
+              width="90px"
+            >
+              <Icon name="Check" size="small" color="white" />
+              {loading ? "Salvando..." : "Criar"}
+            </Button>
+          </div>
+        )}
       </div>
     </form>
   );
