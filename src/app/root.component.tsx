@@ -68,7 +68,7 @@ export default function Root(_props: RootProps) {
       window.removeEventListener("accountIdChanged", handleAccountIdChange);
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, []);
+  }, [accountId]);
 
   useEffect(() => {
     const updateUrlParams = () => {

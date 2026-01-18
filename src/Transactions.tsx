@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Card, Text, Button, Loading } from "@grupo10-pos-fiap/design-system";
 import { useTransaction } from "@/hooks/useTransaction";
 import { Transaction } from "@/types/transactions";
-import { getTransactionIdFromUrl } from "@/utils/urlParams";
+import { getTransactionIdFromUrl, updateUrlParams } from "@/utils/urlParams";
 import { getTransaction as fetchTransaction } from "@/api/transactions.api";
 import TransactionForm from "@/components/TransactionForm";
 import ErrorMessage from "@/components/ErrorMessage";
@@ -82,7 +82,7 @@ function Transactions({
         });
 
         setTransaction(null);
-        setFormKey((prev) => prev + 1); 
+        setFormKey((prev) => prev + 1);
 
         setSuccessMessage("Transação criada com sucesso!");
 
@@ -90,6 +90,7 @@ function Transactions({
           setSuccessMessage("");
         }, 3000);
       } catch (error) {
+        // Error is handled by transactionHook.error
       }
     },
     [accountId, transactionHook]
@@ -118,6 +119,7 @@ function Transactions({
         setShowSuccessModal(true);
         setTransaction(updatedTransaction);
       } catch (error) {
+        // Error is handled by transactionHook.error
       }
     },
     [transactionId, urlTransactionId, transactionHook]
@@ -127,27 +129,15 @@ function Transactions({
     setShowSuccessModal(false);
 
     if (successModalType === "update" && updatedTransactionId) {
-      if (window.history) {
-        const url = new URL(window.location.href);
-        url.searchParams.set("view", "details");
-        url.searchParams.set("id", updatedTransactionId);
-        window.history.replaceState({}, "", url.toString());
-
-        setTimeout(() => {
-          window.dispatchEvent(new PopStateEvent("popstate"));
-        }, 0);
-      }
+      updateUrlParams({
+        view: "details",
+        id: updatedTransactionId,
+      });
     } else if (successModalType === "delete") {
-      if (window.history) {
-        const url = new URL(window.location.href);
-        url.searchParams.delete("view");
-        url.searchParams.delete("id");
-        window.history.replaceState({}, "", url.toString());
-
-        setTimeout(() => {
-          window.dispatchEvent(new PopStateEvent("popstate"));
-        }, 0);
-      }
+      updateUrlParams({
+        view: null,
+        id: null,
+      });
     }
 
     setSuccessModalType(null);
@@ -162,15 +152,14 @@ function Transactions({
         setTransaction(null);
         setFormKey((prev) => prev + 1);
 
-        if (urlTransactionId && window.history) {
-          const url = new URL(window.location.href);
-          url.searchParams.delete("id");
-          window.history.replaceState({}, "", url.toString());
+        if (urlTransactionId) {
+          updateUrlParams({ id: null }, false);
         }
 
         setSuccessModalType("delete");
         setShowSuccessModal(true);
       } catch (error) {
+        // Error is handled by transactionHook.error
       }
     },
     [transactionHook, urlTransactionId]
@@ -178,21 +167,12 @@ function Transactions({
 
   const handleCancel = useCallback(() => {
     if (isEditMode && urlTransactionId) {
-      if (window.history) {
-        const url = new URL(window.location.href);
-        url.searchParams.delete("id");
-        url.searchParams.set("view", "details");
-        url.searchParams.set("id", urlTransactionId);
-        window.history.replaceState({}, "", url.toString());
-        
-        setTimeout(() => {
-          window.dispatchEvent(new PopStateEvent("popstate"));
-        }, 0);
-      }
-    } else {
-      if (window.location) {
-        window.location.href = "/statement";
-      }
+      updateUrlParams({
+        id: urlTransactionId,
+        view: "details",
+      });
+    } else if (window.location) {
+      window.location.href = "/statement";
     }
   }, [isEditMode, urlTransactionId]);
 

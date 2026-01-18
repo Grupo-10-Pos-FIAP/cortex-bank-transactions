@@ -1,3 +1,5 @@
-export default function Root(props) {
-  return <section>{props.name} is mounted!</section>;
-}
+import Root from "./app/root.component";
+import type { RootProps } from "./app/root.component";
+
+export default Root;
+export type { RootProps };
