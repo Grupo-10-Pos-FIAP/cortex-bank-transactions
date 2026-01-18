@@ -4,6 +4,8 @@
  * Backend espera: ponto para decimais (ex: 1234.56)
  */
 
+import { formatValue } from "./formatters";
+
 /**
  * Remove todos os caracteres não numéricos
  */
@@ -27,10 +29,11 @@ export function parseCurrency(value: string): number {
 }
 
 /**
- * Formata número para string com máscara brasileira
+ * Formata número para string com máscara brasileira (sem símbolo de moeda)
  * Ex: 1234.56 -> "1.234,56"
+ * Usa formatValue de formatters.ts para manter consistência
  */
-export function formatCurrency(value: number | string): string {
+function formatCurrencyValue(value: number | string): string {
   if (value === "" || value === null || value === undefined) {
     return "";
   }
@@ -41,10 +44,7 @@ export function formatCurrency(value: number | string): string {
     return "";
   }
 
-  return new Intl.NumberFormat("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(numValue);
+  return formatValue(numValue);
 }
 
 /**
@@ -71,25 +71,5 @@ export function applyCurrencyMask(value: string): string {
 
   const valueWithDecimals = number / 100;
 
-  return formatCurrency(valueWithDecimals);
+  return formatCurrencyValue(valueWithDecimals);
 }
-
-/**
- * Converte valor formatado (com vírgula) para o formato do backend (com ponto)
- * Ex: "1.234,56" -> "1234.56"
- */
-export function convertToBackendFormat(value: string): string {
-  if (!value || value.trim() === "") {
-    return "0.00";
-  }
-
-  const cleaned = value.replace(/\./g, "").replace(",", ".");
-  const parsed = parseFloat(cleaned);
-
-  if (isNaN(parsed)) {
-    return "0.00";
-  }
-
-  return parsed.toFixed(2);
-}
-

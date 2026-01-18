@@ -8,11 +8,8 @@ import {
 } from "@grupo10-pos-fiap/design-system";
 import { Transaction, TransactionFormData } from "@/types/transactions";
 import { uploadFile, validateFile } from "@/utils/fileUpload";
-import {
-  applyCurrencyMask,
-  parseCurrency,
-  formatCurrency,
-} from "@/utils/currencyMask";
+import { applyCurrencyMask, parseCurrency } from "@/utils/currencyMask";
+import { formatCurrency } from "@/utils/formatters";
 import styles from "./TransactionForm.module.css";
 
 interface TransactionFormProps {
@@ -163,6 +160,7 @@ function TransactionForm({
       try {
         await onSubmit(transactionData);
       } catch (error) {
+        // Error is handled by parent component
       }
     },
     [formData, transaction, onSubmit]
@@ -254,6 +252,19 @@ function TransactionForm({
               !uploadingFile &&
               document.getElementById("file-upload")?.click()
             }
+            onKeyDown={(e) => {
+              if (
+                (e.key === "Enter" || e.key === " ") &&
+                !loading &&
+                !uploadingFile
+              ) {
+                e.preventDefault();
+                document.getElementById("file-upload")?.click();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="Selecionar arquivo"
           >
             {uploadingFile ? (
               <span className={styles.fileInputText}>Enviando...</span>
