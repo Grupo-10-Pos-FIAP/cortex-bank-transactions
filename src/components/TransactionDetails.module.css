@@ -137,15 +137,6 @@
   word-break: break-word;
 }
 
-.typeBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  background-color: var(--color-background-subtle);
-  width: fit-content;
-}
-
 .statusBadge {
   display: inline-flex;
   align-items: center;

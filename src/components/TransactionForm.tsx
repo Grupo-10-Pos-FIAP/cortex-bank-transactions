@@ -80,7 +80,6 @@ function TransactionForm({
   const handleValueChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
-      // Aplica máscara de moeda brasileira
       const maskedValue = applyCurrencyMask(inputValue);
       handleInputChange("value", maskedValue);
     },
@@ -135,7 +134,6 @@ function TransactionForm({
     try {
       await onDelete(transaction.id);
     } catch (error) {
-      // Error handling is done in the parent component
     } finally {
       setDeleting(false);
     }
@@ -145,7 +143,6 @@ function TransactionForm({
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      // Converte valor formatado (com vírgula) para número
       const value = parseCurrency(formData.value);
       if (isNaN(value) || value <= 0) {
         setFileError("Valor deve ser maior que zero");
@@ -166,7 +163,6 @@ function TransactionForm({
       try {
         await onSubmit(transactionData);
       } catch (error) {
-        // Error handling is done in the parent component
       }
     },
     [formData, transaction, onSubmit]

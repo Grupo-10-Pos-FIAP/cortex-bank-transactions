@@ -60,10 +60,7 @@ function TransactionDetails({
 
   const handleDownload = useCallback(async (url: string, fileName: string) => {
     try {
-      // Se a URL for de um serviço externo (como Cloudinary), pode precisar de CORS
-      // Tenta abrir em nova aba primeiro, se falhar, tenta fazer download direto
       if (url.startsWith("http://") || url.startsWith("https://")) {
-        // Para URLs externas, tenta abrir em nova aba
         const link = document.createElement("a");
         link.href = url;
         link.target = "_blank";
@@ -73,13 +70,10 @@ function TransactionDetails({
         link.click();
         document.body.removeChild(link);
       } else {
-        // Para URLs relativas ou outros formatos, faz fetch
         const response = await fetch(url);
         if (!response.ok) {
-          // Redireciona para auth em caso de 401 (não autorizado)
           if (response.status === 401) {
             if (typeof window !== "undefined" && window.localStorage) {
-              // Limpa o token do localStorage antes de redirecionar
               localStorage.removeItem("token");
               window.location.href = "/auth";
             }
@@ -98,7 +92,6 @@ function TransactionDetails({
         window.URL.revokeObjectURL(downloadUrl);
       }
     } catch (err) {
-      // Se falhar, tenta abrir em nova aba como fallback
       try {
         window.open(url, "_blank", "noopener,noreferrer");
       } catch (fallbackErr) {
@@ -111,7 +104,6 @@ function TransactionDetails({
     if (onBack) {
       onBack();
     } else {
-      // Fallback: redireciona para /statement
       if (window.location) {
         window.location.href = "/statement";
       }
@@ -121,11 +113,9 @@ function TransactionDetails({
   const handleEdit = useCallback(() => {
     if (!transactionId) return;
 
-    // Usa o callback do root para atualizar o estado corretamente
     if (onEdit) {
       onEdit(transactionId);
     } else {
-      // Fallback: atualiza a URL diretamente
       if (window.history) {
         const url = new URL(window.location.href);
         url.searchParams.delete("view");
