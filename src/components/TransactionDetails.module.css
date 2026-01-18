@@ -82,6 +82,20 @@
   border-color: var(--color-error-dark, #c82333) !important;
 }
 
+.footerActions .actionButtonWrapper:first-child button:disabled {
+  background-color: var(--color-gray-400, #9ca3af) !important;
+  border-color: var(--color-gray-400, #9ca3af) !important;
+  color: var(--color-gray-600, #4b5563) !important;
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+.footerActions button:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
 .footerActions button {
   gap: var(--spacing-xs) !important;
 }
@@ -129,6 +143,15 @@
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   background-color: var(--color-background-subtle);
+  width: fit-content;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-warning-light, #fff3cd);
   width: fit-content;
 }
 
