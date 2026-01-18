@@ -44,7 +44,7 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@types/systemjs": "^6.1.1",
-    "@types/webpack-env": "^1.16.2"
+    "@types/webpack-env": "^1.16.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "single-spa": "^5.9.3",
