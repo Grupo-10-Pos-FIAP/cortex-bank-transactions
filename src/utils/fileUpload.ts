@@ -74,19 +74,4 @@ export function validateFile(file: File, maxSizeInMB: number = 5): boolean {
   return true;
 }
 
-/**
- * Obtém a extensão do arquivo
- */
-export function getFileExtension(fileName: string): string {
-  const parts = fileName.split(".");
-  return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : "";
-}
-
-/**
- * Verifica se o tipo de arquivo é permitido
- */
-export function isAllowedFileType(fileName: string, allowedTypes: string[]): boolean {
-  const extension = getFileExtension(fileName);
-  return allowedTypes.includes(extension);
-}
 
