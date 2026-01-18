@@ -23,31 +23,24 @@ export async function getTransaction(id: string): Promise<Transaction> {
 
     const result: TransactionsListResponse | TransactionResponse = await response.json();
     
-    // Verifica se result existe
     if (!result || !result.result) {
       throw new Error("Resposta inválida do servidor");
     }
     
-    // O backend retorna um objeto DetailedAccount diretamente em result.result
-    // Verifica se é um objeto Transaction válido
     if (typeof result.result === 'object' && !Array.isArray(result.result)) {
       const transaction = result.result as Transaction;
-      // Valida se tem os campos mínimos
       if (transaction.id || transaction.accountId) {
         return transaction;
       }
     }
     
-    // Se for um array de transações
     if (Array.isArray(result.result)) {
       if (result.result.length === 0) {
         throw new Error("Transação não encontrada");
       }
-      // Retorna o primeiro item do array
       return result.result[0];
     }
     
-    // Se for um objeto com transactions (formato alternativo)
     if (result.result && typeof result.result === 'object' && 'transactions' in result.result) {
       const transactions = (result.result as { transactions: Transaction[] }).transactions;
       if (transactions.length === 0) {
@@ -58,7 +51,6 @@ export async function getTransaction(id: string): Promise<Transaction> {
     
     throw new Error("Formato de resposta inválido do servidor");
   } catch (error) {
-    // Re-throw se já for um Error, senão cria um novo
     if (error instanceof Error) {
       throw error;
     }

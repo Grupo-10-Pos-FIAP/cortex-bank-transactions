@@ -177,7 +177,6 @@ export default function Root(_props: RootProps) {
     );
   }
 
-  // Se view=details e há transactionId, exibe a tela de detalhes
   if (view === "details" && transactionId) {
     return (
       <div className={styles.container}>
