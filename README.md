@@ -20,7 +20,6 @@ A aplicação foi desenvolvida utilizando a arquitetura de **microfrontends** co
 - **TypeScript 4.3.5** - Tipagem estática
 - **Single-SPA 5.9.3** - Framework para microfrontends
 - **Webpack 5.89.0** - Bundler e build tool
-- **Jest 27.5.1** - Framework de testes
 - **ESLint + Prettier** - Linting e formatação de código
 - **Husky** - Git hooks para qualidade de código
 
@@ -39,7 +38,6 @@ transactions/
 │   └── styles/           # Estilos globais
 ├── .github/              # Workflows CI/CD
 ├── webpack.config.js     # Configuração do Webpack
-├── jest.config.js        # Configuração de testes
 └── package.json          # Dependências e scripts
 ```
 
@@ -135,28 +133,10 @@ npm run start:backend
 | `npm run build` | Gera build de produção |
 | `npm run build:webpack` | Build apenas do webpack |
 | `npm run build:types` | Gera arquivos de tipos TypeScript |
-| `npm test` | Executa os testes |
-| `npm run watch-tests` | Executa testes em modo watch |
-| `npm run coverage` | Gera relatório de cobertura de testes |
 | `npm run lint` | Executa o linter |
 | `npm run format` | Formata o código com Prettier |
 | `npm run check-format` | Verifica formatação sem alterar arquivos |
 | `npm run analyze` | Analisa o bundle gerado |
-
-## 🧪 Testes
-
-A aplicação utiliza Jest e React Testing Library para testes:
-
-```bash
-# Executar todos os testes
-npm test
-
-# Executar em modo watch
-npm run watch-tests
-
-# Gerar relatório de cobertura
-npm run coverage
-```
 
 ## 🏗️ Build de Produção
 
@@ -191,7 +171,6 @@ A aplicação roda na porta **3003** por padrão. Para alterar, edite `webpack.c
 - **`Transactions`**: Componente principal que gerencia o fluxo de transações
 - **`TransactionForm`**: Formulário para criação/edição de transações
 - **`TransactionDetails`**: Visualização detalhada de uma transação
-- **`TransactionList`**: Lista de transações (se aplicável)
 - **`SuccessModal`**: Modal de confirmação de ações
 - **`ErrorMessage`**: Componente de exibição de erros
 - **`SuccessMessage`**: Mensagem de sucesso
@@ -199,7 +178,6 @@ A aplicação roda na porta **3003** por padrão. Para alterar, edite `webpack.c
 ### Hooks Customizados
 
 - **`useTransaction`**: Gerencia operações CRUD de transações
-- **`useTransactions`**: Gerencia listagem de transações
 
 ## 🔌 Integração com Single-SPA
 
