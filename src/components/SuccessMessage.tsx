@@ -43,4 +43,3 @@ function SuccessMessage({
 }
 
 export default React.memo(SuccessMessage);
-

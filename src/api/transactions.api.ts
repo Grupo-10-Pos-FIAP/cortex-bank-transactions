@@ -18,37 +18,45 @@ export async function getTransaction(id: string): Promise<Transaction> {
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => response.statusText);
-      throw new Error(`Erro ao buscar transação: ${response.status} ${errorText}`);
+      throw new Error(
+        `Erro ao buscar transação: ${response.status} ${errorText}`
+      );
     }
 
-    const result: TransactionsListResponse | TransactionResponse = await response.json();
-    
+    const result: TransactionsListResponse | TransactionResponse =
+      await response.json();
+
     if (!result || !result.result) {
       throw new Error("Resposta inválida do servidor");
     }
-    
-    if (typeof result.result === 'object' && !Array.isArray(result.result)) {
+
+    if (typeof result.result === "object" && !Array.isArray(result.result)) {
       const transaction = result.result as Transaction;
       if (transaction.id || transaction.accountId) {
         return transaction;
       }
     }
-    
+
     if (Array.isArray(result.result)) {
       if (result.result.length === 0) {
         throw new Error("Transação não encontrada");
       }
       return result.result[0];
     }
-    
-    if (result.result && typeof result.result === 'object' && 'transactions' in result.result) {
-      const transactions = (result.result as { transactions: Transaction[] }).transactions;
+
+    if (
+      result.result &&
+      typeof result.result === "object" &&
+      "transactions" in result.result
+    ) {
+      const transactions = (result.result as { transactions: Transaction[] })
+        .transactions;
       if (transactions.length === 0) {
         throw new Error("Transação não encontrada");
       }
       return transactions[0];
     }
-    
+
     throw new Error("Formato de resposta inválido do servidor");
   } catch (error) {
     if (error instanceof Error) {

@@ -251,7 +251,8 @@ function TransactionDetails({
               variant="outlined"
               onClick={handleCancelDelete}
               disabled={deleting}
-              width="120px">
+              width="120px"
+            >
               Cancelar
             </Button>
             <Button
@@ -332,10 +333,7 @@ function TransactionDetails({
                     >
                       Data
                     </Text>
-                    <Text
-                      variant="caption"
-                      className={styles.value}
-                    >
+                    <Text variant="caption" className={styles.value}>
                       {formatDate(transaction.date)}
                     </Text>
                   </div>
@@ -351,10 +349,7 @@ function TransactionDetails({
                       Status
                     </Text>
                     <div className={styles.statusBadge}>
-                      <Text
-                        variant="caption"
-                        color="warning"
-                      >
+                      <Text variant="caption" color="warning">
                         Pendente
                       </Text>
                     </div>
@@ -372,11 +367,9 @@ function TransactionDetails({
                   >
                     Tipo
                   </Text>
-                    <Text
-                      variant="caption"
-                    >
-                      {transaction.type === "Credit" ? "Crédito" : "Débito"}
-                    </Text>
+                  <Text variant="caption">
+                    {transaction.type === "Credit" ? "Crédito" : "Débito"}
+                  </Text>
                 </div>
 
                 <div className={styles.detailItem}>
@@ -409,10 +402,7 @@ function TransactionDetails({
                       >
                         De
                       </Text>
-                      <Text
-                        variant="caption"
-                        className={styles.value}
-                      >
+                      <Text variant="caption" className={styles.value}>
                         {transaction.from}
                       </Text>
                     </div>
@@ -427,10 +417,7 @@ function TransactionDetails({
                       >
                         Para
                       </Text>
-                      <Text
-                        variant="caption"
-                        className={styles.value}
-                      >
+                      <Text variant="caption" className={styles.value}>
                         {transaction.to}
                       </Text>
                     </div>
