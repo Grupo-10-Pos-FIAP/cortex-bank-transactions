@@ -31,25 +31,20 @@ export async function uploadToCloudinary(
       return;
     }
 
-    // Valida se as credenciais estão configuradas
     if (!cloudName || !uploadPreset) {
       reject(new Error("Credenciais do Cloudinary não configuradas"));
       return;
     }
 
-    // Cria o FormData para enviar o arquivo
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", uploadPreset);
     
-    // Opcional: adiciona pasta para organização
     const folder = process.env.CLOUDINARY_FOLDER || "transactions";
     formData.append("folder", folder);
 
-    // URL do Cloudinary para upload
     const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
 
-    // Faz o upload
     fetch(uploadUrl, {
       method: "POST",
       body: formData,
@@ -63,7 +58,6 @@ export async function uploadToCloudinary(
         return response.json();
       })
       .then((data) => {
-        // Cloudinary retorna a URL segura (HTTPS)
         resolve({
           url: data.secure_url || data.url,
           fileName: file.name,

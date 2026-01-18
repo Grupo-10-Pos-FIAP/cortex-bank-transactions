@@ -37,10 +37,7 @@ export async function storeFile(file: File): Promise<string> {
         const fileId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         const result = reader.result as string;
 
-        // Armazena no localStorage (para arquivos pequenos)
-        // Para arquivos maiores, seria melhor usar IndexedDB
         if (file.size < 5 * 1024 * 1024) {
-          // Para arquivos menores que 5MB, usa localStorage
           const storedFiles = getStoredFiles();
           
           const fileData: StoredFile = {
@@ -58,12 +55,10 @@ export async function storeFile(file: File): Promise<string> {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(storedFiles));
             resolve(fileId);
           } catch (error) {
-            // Se falhar (ex: quota excedida), usa apenas a URL do objeto
             const objectUrl = URL.createObjectURL(file);
             resolve(objectUrl);
           }
         } else {
-          // Para arquivos maiores, usa URL.createObjectURL (mantém em memória)
           const objectUrl = URL.createObjectURL(file);
           resolve(objectUrl);
         }
@@ -101,7 +96,6 @@ export function removeStoredFile(fileId: string): void {
     delete storedFiles[fileId];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedFiles));
   } catch (error) {
-    // Ignora erros
   }
 }
 
@@ -123,7 +117,6 @@ export function cleanOldFiles(): void {
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(storedFiles));
   } catch (error) {
-    // Ignora erros
   }
 }
 

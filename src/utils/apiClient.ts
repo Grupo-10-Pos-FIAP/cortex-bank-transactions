@@ -72,10 +72,8 @@ export async function fetchApi(
     }
 
     if (!response.ok) {
-      // Redireciona para auth em caso de 401 (não autorizado)
       if (response.status === 401) {
         if (typeof window !== "undefined" && window.localStorage) {
-          // Limpa o token do localStorage antes de redirecionar
           localStorage.removeItem("token");
           window.location.href = "/auth";
         }

@@ -33,8 +33,6 @@ export async function uploadFile(file: File): Promise<FileUploadResult> {
     const config = getCloudinaryConfig();
     
     if (!config.cloudName || !config.uploadPreset) {
-      // Se Cloudinary não estiver configurado, retorna uma URL temporária
-      // sem fazer upload (compatibilidade com desenvolvimento)
       const tempUrl = `temp://${Date.now()}-${file.name}`;
       return {
         url: tempUrl,
@@ -44,7 +42,6 @@ export async function uploadFile(file: File): Promise<FileUploadResult> {
       };
     }
 
-    // Faz upload para o Cloudinary
     return await uploadToCloudinary(
       file,
       config.cloudName,

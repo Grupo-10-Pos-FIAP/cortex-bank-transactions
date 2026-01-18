@@ -20,7 +20,6 @@ export function parseCurrency(value: string): number {
     return 0;
   }
 
-  // Remove pontos (separadores de milhar) e substitui vírgula por ponto
   const cleaned = value.replace(/\./g, "").replace(",", ".");
   const parsed = parseFloat(cleaned);
 
@@ -42,7 +41,6 @@ export function formatCurrency(value: number | string): string {
     return "";
   }
 
-  // Formata com separador de milhar (.) e decimal (,)
   return new Intl.NumberFormat("pt-BR", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -55,29 +53,24 @@ export function formatCurrency(value: number | string): string {
  * Permite que o usuário digite números e formata automaticamente
  */
 export function applyCurrencyMask(value: string): string {
-  // Se o valor estiver vazio, retorna vazio
   if (!value || value.trim() === "") {
     return "";
   }
 
-  // Remove tudo que não é número
   const numbers = removeNonNumeric(value);
 
   if (numbers === "") {
     return "";
   }
 
-  // Converte para número inteiro (representa centavos)
   const number = parseInt(numbers, 10);
 
   if (isNaN(number)) {
     return "";
   }
 
-  // Divide por 100 para ter os decimais
   const valueWithDecimals = number / 100;
 
-  // Formata com máscara brasileira
   return formatCurrency(valueWithDecimals);
 }
 
@@ -90,7 +83,6 @@ export function convertToBackendFormat(value: string): string {
     return "0.00";
   }
 
-  // Remove pontos (separadores de milhar) e substitui vírgula por ponto
   const cleaned = value.replace(/\./g, "").replace(",", ".");
   const parsed = parseFloat(cleaned);
 
@@ -98,7 +90,6 @@ export function convertToBackendFormat(value: string): string {
     return "0.00";
   }
 
-  // Garante 2 casas decimais
   return parsed.toFixed(2);
 }
 
