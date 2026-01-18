@@ -24,6 +24,8 @@ function TransactionItem({
   const personName = isCredit ? transaction.from : transaction.to;
   const displayValue = formatValue(Math.abs(transaction.value));
   const formattedDate = transaction.date ? formatDate(transaction.date) : "";
+  const isPending = transaction.status === "Pending";
+  const canEditOrDelete = isPending;
 
   const handleEdit = useCallback(() => {
     if (onEdit && transaction.id) {
@@ -130,7 +132,7 @@ function TransactionItem({
               </Text>
             </div>
           )}
-          {(onEdit || onDelete) && (
+          {(onEdit || onDelete) && canEditOrDelete && (
             <div className={styles.transactionActions}>
               {onEdit && (
                 <Button
