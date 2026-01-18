@@ -28,3 +28,32 @@ export function getViewParamFromUrl(): string | null {
   return getQueryParam("view");
 }
 
+/**
+ * Atualiza os parâmetros da URL e dispara evento de navegação
+ */
+export function updateUrlParams(
+  params: Record<string, string | null>,
+  dispatchEvent = true
+): void {
+  if (typeof window === "undefined" || !window.history) {
+    return;
+  }
+
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === null) {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, value);
+    }
+  });
+
+  window.history.replaceState({}, "", url.toString());
+
+  if (dispatchEvent) {
+    setTimeout(() => {
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    }, 0);
+  }
+}
+
