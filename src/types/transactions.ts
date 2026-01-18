@@ -8,6 +8,7 @@ export interface Transaction {
   anexo?: string;
   urlAnexo?: string;
   date?: string;
+  status?: "Pending" | "Done";
 }
 
 export interface TransactionFormData {
