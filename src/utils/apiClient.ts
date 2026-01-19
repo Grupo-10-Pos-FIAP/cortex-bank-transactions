@@ -96,4 +96,3 @@ export async function fetchApi(
 
   return performFetch();
 }
-

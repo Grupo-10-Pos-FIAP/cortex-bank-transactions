@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Text, Loading, Button, Card } from "@grupo10-pos-fiap/design-system";
 import { getAccountId } from "@/utils/accountStorage";
-import {
-  getTransactionIdFromUrl,
-  getViewParamFromUrl,
-} from "@/utils/urlParams";
+import { getTransactionIdFromUrl, getViewParamFromUrl } from "@/utils/urlParams";
 import Transactions from "../Transactions";
 import TransactionDetails from "../components/TransactionDetails";
 import { QueryProvider } from "../providers/QueryProvider";
@@ -101,19 +98,13 @@ export default function Root(_props: RootProps) {
 
     window.addEventListener("popstate", handlePopState);
     window.addEventListener("hashchange", handleHashChange);
-    window.addEventListener(
-      "single-spa:routing-event",
-      handleSingleSpaRouteChange
-    );
+    window.addEventListener("single-spa:routing-event", handleSingleSpaRouteChange);
 
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("hashchange", handleHashChange);
-      window.removeEventListener(
-        "single-spa:routing-event",
-        handleSingleSpaRouteChange
-      );
+      window.removeEventListener("single-spa:routing-event", handleSingleSpaRouteChange);
     };
   }, []);
 
@@ -154,9 +145,7 @@ export default function Root(_props: RootProps) {
         <div className={styles.container}>
           <Card title="Transações" variant="elevated" color="white">
             <Card.Section>
-              <div
-                style={{ textAlign: "center", padding: "var(--spacing-xl)" }}
-              >
+              <div style={{ textAlign: "center", padding: "var(--spacing-xl)" }}>
                 <Text
                   variant="subtitle"
                   weight="semibold"
@@ -165,13 +154,9 @@ export default function Root(_props: RootProps) {
                 >
                   Conta não identificada
                 </Text>
-                <Text
-                  variant="body"
-                  color="gray600"
-                  style={{ marginBottom: "var(--spacing-lg)" }}
-                >
-                  Não foi possível identificar a conta. Por favor, verifique se
-                  o accountId está armazenado no localStorage.
+                <Text variant="body" color="gray600" style={{ marginBottom: "var(--spacing-lg)" }}>
+                  Não foi possível identificar a conta. Por favor, verifique se o accountId está
+                  armazenado no localStorage.
                 </Text>
                 <Button variant="primary" onClick={handleRefresh} width="90px">
                   Atualizar Tela

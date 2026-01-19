@@ -18,13 +18,10 @@ export async function getTransaction(id: string): Promise<Transaction> {
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => response.statusText);
-      throw new Error(
-        `Erro ao buscar transação: ${response.status} ${errorText}`
-      );
+      throw new Error(`Erro ao buscar transação: ${response.status} ${errorText}`);
     }
 
-    const result: TransactionsListResponse | TransactionResponse =
-      await response.json();
+    const result: TransactionsListResponse | TransactionResponse = await response.json();
 
     if (!result || !result.result) {
       throw new Error("Resposta inválida do servidor");
@@ -44,13 +41,8 @@ export async function getTransaction(id: string): Promise<Transaction> {
       return result.result[0];
     }
 
-    if (
-      result.result &&
-      typeof result.result === "object" &&
-      "transactions" in result.result
-    ) {
-      const transactions = (result.result as { transactions: Transaction[] })
-        .transactions;
+    if (result.result && typeof result.result === "object" && "transactions" in result.result) {
+      const transactions = (result.result as { transactions: Transaction[] }).transactions;
       if (transactions.length === 0) {
         throw new Error("Transação não encontrada");
       }
@@ -69,9 +61,7 @@ export async function getTransaction(id: string): Promise<Transaction> {
 /**
  * Cria uma nova transação
  */
-export async function createTransaction(
-  data: CreateTransactionRequest
-): Promise<Transaction> {
+export async function createTransaction(data: CreateTransactionRequest): Promise<Transaction> {
   try {
     const response = await fetchApi("/account/transaction", {
       method: "POST",
@@ -81,9 +71,7 @@ export async function createTransaction(
     const result: TransactionResponse = await response.json();
     return result.result;
   } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : "Erro ao criar transação"
-    );
+    throw new Error(error instanceof Error ? error.message : "Erro ao criar transação");
   }
 }
 
@@ -103,9 +91,7 @@ export async function updateTransaction(
     const result: TransactionResponse = await response.json();
     return result.result;
   } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : "Erro ao atualizar transação"
-    );
+    throw new Error(error instanceof Error ? error.message : "Erro ao atualizar transação");
   }
 }
 
@@ -118,8 +104,6 @@ export async function deleteTransaction(id: string): Promise<void> {
       method: "DELETE",
     });
   } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : "Erro ao excluir transação"
-    );
+    throw new Error(error instanceof Error ? error.message : "Erro ao excluir transação");
   }
 }

@@ -1,6 +1,6 @@
 /**
  * Serviço de upload para Cloudinary
- * 
+ *
  * Este serviço é desacoplado e pode ser facilmente substituído.
  * Mantém a mesma interface do fileUpload.ts
  */
@@ -14,7 +14,7 @@ export interface FileUploadResult {
 
 /**
  * Faz upload de um arquivo para o Cloudinary
- * 
+ *
  * @param file Arquivo a ser enviado
  * @param cloudName Nome da conta Cloudinary
  * @param uploadPreset Preset de upload (pode ser unsigned)
@@ -39,7 +39,7 @@ export async function uploadToCloudinary(
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", uploadPreset);
-    
+
     const folder = process.env.CLOUDINARY_FOLDER || "transactions";
     formData.append("folder", folder);
 
@@ -67,13 +67,8 @@ export async function uploadToCloudinary(
       })
       .catch((error) => {
         reject(
-          new Error(
-            error instanceof Error
-              ? error.message
-              : "Erro ao fazer upload para Cloudinary"
-          )
+          new Error(error instanceof Error ? error.message : "Erro ao fazer upload para Cloudinary")
         );
       });
   });
 }
-

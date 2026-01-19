@@ -1,11 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import {
-  Button,
-  Input,
-  Dropdown,
-  Text,
-  Icon,
-} from "@grupo10-pos-fiap/design-system";
+import { Button, Input, Dropdown, Text, Icon } from "@grupo10-pos-fiap/design-system";
 import { Transaction, TransactionFormData } from "@/types/transactions";
 import { uploadFile, validateFile } from "@/utils/fileUpload";
 import { applyCurrencyMask, parseCurrency } from "@/utils/currencyMask";
@@ -41,8 +35,7 @@ function TransactionForm({
   loading = false,
   isEditMode = false,
 }: TransactionFormProps) {
-  const [formData, setFormData] =
-    useState<TransactionFormData>(initialFormData);
+  const [formData, setFormData] = useState<TransactionFormData>(initialFormData);
   const [fileError, setFileError] = useState<string>("");
   const [uploadingFile, setUploadingFile] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -67,12 +60,9 @@ function TransactionForm({
     }
   }, [transaction, accountId]);
 
-  const handleInputChange = useCallback(
-    (field: keyof TransactionFormData, value: string) => {
-      setFormData((prev) => ({ ...prev, [field]: value }));
-    },
-    []
-  );
+  const handleInputChange = useCallback((field: keyof TransactionFormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  }, []);
 
   const handleValueChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,11 +95,7 @@ function TransactionForm({
         handleInputChange("urlAnexo", result.url);
         handleInputChange("anexo", result.fileName);
       } catch (error) {
-        setFileError(
-          error instanceof Error
-            ? error.message
-            : "Erro ao fazer upload do arquivo"
-        );
+        setFileError(error instanceof Error ? error.message : "Erro ao fazer upload do arquivo");
         setSelectedFile(null);
       } finally {
         setUploadingFile(false);
@@ -187,9 +173,7 @@ function TransactionForm({
               },
             ]}
             placeholder={formData.type === "Debit" ? "Débito" : "Crédito"}
-            onValueChange={(value) =>
-              handleInputChange("type", value as "Debit" | "Credit")
-            }
+            onValueChange={(value) => handleInputChange("type", value as "Debit" | "Credit")}
             width="100%"
           />
         </div>
@@ -248,16 +232,10 @@ function TransactionForm({
           <div
             className={styles.fileInputWrapper}
             onClick={() =>
-              !loading &&
-              !uploadingFile &&
-              document.getElementById("file-upload")?.click()
+              !loading && !uploadingFile && document.getElementById("file-upload")?.click()
             }
             onKeyDown={(e) => {
-              if (
-                (e.key === "Enter" || e.key === " ") &&
-                !loading &&
-                !uploadingFile
-              ) {
+              if ((e.key === "Enter" || e.key === " ") && !loading && !uploadingFile) {
                 e.preventDefault();
                 document.getElementById("file-upload")?.click();
               }
@@ -269,12 +247,10 @@ function TransactionForm({
             {uploadingFile ? (
               <span className={styles.fileInputText}>Enviando...</span>
             ) : selectedFile?.name || formData.anexo ? (
-              <span className={styles.fileInputText}>
-                {selectedFile?.name || formData.anexo}
-              </span>
+              <span className={styles.fileInputText}>{selectedFile?.name || formData.anexo}</span>
             ) : (
               <div className={styles.fileInputPlaceholder}>
-                <Icon color='gray500' name="FileUp" />
+                <Icon color="gray500" name="FileUp" />
                 <span className={styles.fileInputText}>Selecionar arquivo</span>
               </div>
             )}

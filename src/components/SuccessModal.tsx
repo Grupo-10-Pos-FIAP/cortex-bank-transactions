@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, Button } from "@grupo10-pos-fiap/design-system";
 import styles from "./SuccessModal.module.css";
 
@@ -9,6 +9,21 @@ interface SuccessModalProps {
 }
 
 function SuccessModal({ message, onConfirm, visible }: SuccessModalProps) {
+  useEffect(() => {
+    if (!visible) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onConfirm();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [visible, onConfirm]);
+
   if (!visible) {
     return null;
   }
@@ -17,28 +32,20 @@ function SuccessModal({ message, onConfirm, visible }: SuccessModalProps) {
     onConfirm();
   };
 
-  const handleModalClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
   return (
-    <div
-      className={styles.overlay}
-      onClick={handleOverlayClick}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Modal de sucesso"
-    >
-      <div className={styles.modal} onClick={handleModalClick}>
+    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Modal de sucesso">
+      <button
+        type="button"
+        className={styles.overlayButton}
+        onClick={handleOverlayClick}
+        aria-label="Fechar modal"
+      />
+      <div className={styles.modal}>
         <div className={styles.modalContent}>
           <div className={styles.iconContainer}>
             <span className={styles.checkIcon}>✓</span>
           </div>
-          <Text
-            variant="subtitle"
-            weight="semibold"
-            className={styles.title}
-          >
+          <Text variant="subtitle" weight="semibold" className={styles.title}>
             Sucesso!
           </Text>
           <Text variant="body" className={styles.message}>

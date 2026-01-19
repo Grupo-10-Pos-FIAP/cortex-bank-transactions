@@ -1,10 +1,6 @@
 import { useState, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  createTransaction,
-  updateTransaction,
-  deleteTransaction,
-} from "@/api/transactions.api";
+import { createTransaction, updateTransaction, deleteTransaction } from "@/api/transactions.api";
 import {
   Transaction,
   CreateTransactionRequest,
@@ -48,10 +44,7 @@ export function useTransaction(): UseTransactionReturn {
   );
 
   const update = useCallback(
-    async (
-      id: string,
-      data: UpdateTransactionRequest
-    ): Promise<Transaction> => {
+    async (id: string, data: UpdateTransactionRequest): Promise<Transaction> => {
       setLoading(true);
       setError(null);
       try {

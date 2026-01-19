@@ -19,4 +19,3 @@ export function formatValue(value: number): string {
     maximumFractionDigits: 2,
   }).format(value);
 }
-

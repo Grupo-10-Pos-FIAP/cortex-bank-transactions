@@ -143,16 +143,16 @@
   .formRow {
     grid-template-columns: 1fr;
   }
-  
+
   .formActions {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .formActionsRight {
     width: 100%;
   }
-  
+
   .formActionsRight button {
     flex: 1;
   }
@@ -195,7 +195,7 @@
     height: 110px;
     padding: var(--spacing-sm);
   }
-  
+
   .fileInputText {
     font-size: 14px;
     white-space: normal;
@@ -209,14 +209,13 @@
     height: 100px;
     padding: var(--spacing-sm);
   }
-  
+
   .fileInputText {
     font-size: 13px;
   }
-  
+
   .fileInputPlaceholder {
     flex-direction: column;
     gap: var(--spacing-xs);
   }
 }
-

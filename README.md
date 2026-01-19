@@ -71,22 +71,26 @@ transactions/
 ### Passos
 
 1. Clone o repositório:
+
 ```bash
 git clone <repository-url>
 cd transactions
 ```
 
 2. Instale as dependências:
+
 ```bash
 npm install
 ```
 
 3. Configure as variáveis de ambiente:
+
 ```bash
 cp .env.example .env
 ```
 
 Edite o arquivo `.env` com suas configurações:
+
 ```env
 API_BASE_URL=http://localhost:8080
 USE_MOCK=false
@@ -125,18 +129,18 @@ npm run start:backend
 
 ## 📝 Scripts Disponíveis
 
-| Script | Descrição |
-|--------|-----------|
-| `npm start` | Inicia o servidor de desenvolvimento (modo microfrontend) na porta 3003 |
-| `npm run start:standalone` | Inicia em modo standalone |
-| `npm run start:backend` | Inicia standalone com backend local |
-| `npm run build` | Gera build de produção |
-| `npm run build:webpack` | Build apenas do webpack |
-| `npm run build:types` | Gera arquivos de tipos TypeScript |
-| `npm run lint` | Executa o linter |
-| `npm run format` | Formata o código com Prettier |
-| `npm run check-format` | Verifica formatação sem alterar arquivos |
-| `npm run analyze` | Analisa o bundle gerado |
+| Script                     | Descrição                                                               |
+| -------------------------- | ----------------------------------------------------------------------- |
+| `npm start`                | Inicia o servidor de desenvolvimento (modo microfrontend) na porta 3003 |
+| `npm run start:standalone` | Inicia em modo standalone                                               |
+| `npm run start:backend`    | Inicia standalone com backend local                                     |
+| `npm run build`            | Gera build de produção                                                  |
+| `npm run build:webpack`    | Build apenas do webpack                                                 |
+| `npm run build:types`      | Gera arquivos de tipos TypeScript                                       |
+| `npm run lint`             | Executa o linter                                                        |
+| `npm run format`           | Formata o código com Prettier                                           |
+| `npm run check-format`     | Verifica formatação sem alterar arquivos                                |
+| `npm run analyze`          | Analisa o bundle gerado                                                 |
 
 ## 🏗️ Build de Produção
 
@@ -152,13 +156,13 @@ Os arquivos serão gerados no diretório `dist/`.
 
 ### Variáveis de Ambiente
 
-| Variável | Descrição | Padrão |
-|----------|-----------|--------|
-| `API_BASE_URL` | URL base da API backend | `http://localhost:8080` |
-| `USE_MOCK` | Habilita uso de API mock | `false` |
-| `MOCK_API_BASE_URL` | URL da API mock | `http://localhost:8080` |
-| `CLOUDINARY_CLOUD_NAME` | Nome da conta Cloudinary | - |
-| `CLOUDINARY_UPLOAD_PRESET` | Preset de upload Cloudinary | - |
+| Variável                   | Descrição                   | Padrão                  |
+| -------------------------- | --------------------------- | ----------------------- |
+| `API_BASE_URL`             | URL base da API backend     | `http://localhost:8080` |
+| `USE_MOCK`                 | Habilita uso de API mock    | `false`                 |
+| `MOCK_API_BASE_URL`        | URL da API mock             | `http://localhost:8080` |
+| `CLOUDINARY_CLOUD_NAME`    | Nome da conta Cloudinary    | -                       |
+| `CLOUDINARY_UPLOAD_PRESET` | Preset de upload Cloudinary | -                       |
 
 ### Porta
 
@@ -185,12 +189,12 @@ A aplicação está configurada para ser registrada no Single-SPA:
 
 ```javascript
 // No shell principal
-import { registerApplication } from 'single-spa';
+import { registerApplication } from "single-spa";
 
 registerApplication({
-  name: '@cortex-bank/transactions',
-  app: () => System.import('@cortex-bank/transactions'),
-  activeWhen: ['/transactions'],
+  name: "@cortex-bank/transactions",
+  app: () => System.import("@cortex-bank/transactions"),
+  activeWhen: ["/transactions"],
 });
 ```
 

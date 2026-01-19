@@ -23,16 +23,11 @@ function Transactions({
   transactionId,
   transaction: initialTransaction,
 }: TransactionsProps) {
-  const [transaction, setTransaction] = useState<Transaction | null>(
-    initialTransaction || null
-  );
+  const [transaction, setTransaction] = useState<Transaction | null>(initialTransaction || null);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
-  const [successModalType, setSuccessModalType] =
-    useState<SuccessModalType>(null);
-  const [updatedTransactionId, setUpdatedTransactionId] = useState<
-    string | null
-  >(null);
+  const [successModalType, setSuccessModalType] = useState<SuccessModalType>(null);
+  const [updatedTransactionId, setUpdatedTransactionId] = useState<string | null>(null);
   const [formKey, setFormKey] = useState<number>(0);
   const [loadingTransaction, setLoadingTransaction] = useState<boolean>(false);
   const [loadError, setLoadError] = useState<Error | null>(null);
@@ -52,11 +47,7 @@ function Transactions({
           setTransaction(fetchedTransaction);
         })
         .catch((error) => {
-          setLoadError(
-            error instanceof Error
-              ? error
-              : new Error("Erro ao carregar transação")
-          );
+          setLoadError(error instanceof Error ? error : new Error("Erro ao carregar transação"));
         })
         .finally(() => {
           setLoadingTransaction(false);
@@ -202,12 +193,7 @@ function Transactions({
   if (loadingTransaction) {
     return (
       <div className={styles.transactions}>
-        <Card
-          title="Editar Transação"
-          variant="elevated"
-          color="white"
-          className={styles.card}
-        >
+        <Card title="Editar Transação" variant="elevated" color="white" className={styles.card}>
           <Card.Section className={styles.formSection}>
             <Loading text="Carregando transação..." size="medium" />
           </Card.Section>
@@ -219,12 +205,7 @@ function Transactions({
   if (loadError && isEditMode) {
     return (
       <div className={styles.transactions}>
-        <Card
-          title="Editar Transação"
-          variant="elevated"
-          color="white"
-          className={styles.card}
-        >
+        <Card title="Editar Transação" variant="elevated" color="white" className={styles.card}>
           <Card.Section className={styles.formSection}>
             <ErrorMessage
               error={{
@@ -244,9 +225,7 @@ function Transactions({
                     })
                     .catch((error) => {
                       setLoadError(
-                        error instanceof Error
-                          ? error
-                          : new Error("Erro ao carregar transação")
+                        error instanceof Error ? error : new Error("Erro ao carregar transação")
                       );
                     })
                     .finally(() => {
@@ -287,19 +266,12 @@ function Transactions({
         >
           <Card.Section className={styles.formSection}>
             {successMessage && (
-              <SuccessMessage
-                message={successMessage}
-                onDismiss={() => setSuccessMessage("")}
-              />
+              <SuccessMessage message={successMessage} onDismiss={() => setSuccessMessage("")} />
             )}
             {transactionHook.error && (
               <ErrorMessage
                 error={transactionHook.error}
-                title={
-                  isEditMode
-                    ? "Erro ao atualizar transação"
-                    : "Erro ao criar transação"
-                }
+                title={isEditMode ? "Erro ao atualizar transação" : "Erro ao criar transação"}
                 className={styles.errorMessage}
               />
             )}

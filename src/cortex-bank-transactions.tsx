@@ -19,8 +19,16 @@ const lifecycles = singleSpaReact({
           backgroundColor: "#fff",
         },
       },
-      React.createElement("h2", { style: { color: "#d32f2f", marginTop: 0 } }, "Erro no módulo de Transações"),
-      React.createElement("p", { style: { color: "#666" } }, err?.message || "Ocorreu um erro inesperado"),
+      React.createElement(
+        "h2",
+        { style: { color: "#d32f2f", marginTop: 0 } },
+        "Erro no módulo de Transações"
+      ),
+      React.createElement(
+        "p",
+        { style: { color: "#666" } },
+        err?.message || "Ocorreu um erro inesperado"
+      ),
       React.createElement(
         "button",
         {

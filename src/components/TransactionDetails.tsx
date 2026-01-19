@@ -24,11 +24,7 @@ interface TransactionDetailsProps {
   onEdit?: (id: string) => void;
 }
 
-function TransactionDetails({
-  transactionId,
-  onBack,
-  onEdit,
-}: TransactionDetailsProps) {
+function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetailsProps) {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
@@ -46,9 +42,7 @@ function TransactionDetails({
       const data = await getTransaction(transactionId);
       setTransaction(data);
     } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Erro ao carregar transação")
-      );
+      setError(err instanceof Error ? err : new Error("Erro ao carregar transação"));
     } finally {
       setLoading(false);
     }
@@ -138,9 +132,7 @@ function TransactionDetails({
       setShowSuccessModal(true);
       setShowDeleteDialog(false);
     } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Erro ao excluir transação")
-      );
+      setError(err instanceof Error ? err : new Error("Erro ao excluir transação"));
       setDeleting(false);
       setShowDeleteDialog(false);
     }
@@ -241,8 +233,8 @@ function TransactionDetails({
         </DialogHeader>
         <DialogBody>
           <p style={{ margin: 0, marginBottom: 4 }}>
-            Ao optar por excluir sua transação, ela vai ser cancelada e deletada
-            do seu histórico de transferências.
+            Ao optar por excluir sua transação, ela vai ser cancelada e deletada do seu histórico de
+            transferências.
           </p>
         </DialogBody>
         <DialogFooter align="end">
@@ -255,12 +247,7 @@ function TransactionDetails({
             >
               Cancelar
             </Button>
-            <Button
-              onClick={handleConfirmDelete}
-              color="error"
-              disabled={deleting}
-              width="120px"
-            >
+            <Button onClick={handleConfirmDelete} color="error" disabled={deleting} width="120px">
               {deleting ? "Excluindo..." : "Confirmar"}
             </Button>
           </div>
@@ -279,12 +266,7 @@ function TransactionDetails({
           className={styles.card}
         >
           <div className={styles.backButtonWrapper}>
-            <Button
-              variant="outlined"
-              onClick={handleBack}
-              width="90px"
-              disabled={deleting}
-            >
+            <Button variant="outlined" onClick={handleBack} width="90px" disabled={deleting}>
               <Icon name="ArrowLeft" size="small" />
               Voltar
             </Button>
@@ -294,11 +276,7 @@ function TransactionDetails({
               {/* ID, Conta */}
               <div className={styles.detailRow}>
                 <div className={styles.detailItem}>
-                  <Text
-                    variant="caption"
-                    color="gray600"
-                    className={styles.label}
-                  >
+                  <Text variant="caption" color="gray600" className={styles.label}>
                     ID
                   </Text>
                   <Text variant="caption" className={styles.value}>
@@ -308,11 +286,7 @@ function TransactionDetails({
 
                 {transaction.accountId && (
                   <div className={styles.detailItem}>
-                    <Text
-                      variant="caption"
-                      color="gray600"
-                      className={styles.label}
-                    >
+                    <Text variant="caption" color="gray600" className={styles.label}>
                       Conta
                     </Text>
                     <Text variant="caption" className={styles.value}>
@@ -326,11 +300,7 @@ function TransactionDetails({
               <div className={styles.detailRow}>
                 {transaction.date && (
                   <div className={styles.detailItem}>
-                    <Text
-                      variant="caption"
-                      color="gray600"
-                      className={styles.label}
-                    >
+                    <Text variant="caption" color="gray600" className={styles.label}>
                       Data
                     </Text>
                     <Text variant="caption" className={styles.value}>
@@ -341,11 +311,7 @@ function TransactionDetails({
 
                 {isPending && (
                   <div className={styles.detailItem}>
-                    <Text
-                      variant="caption"
-                      color="gray600"
-                      className={styles.label}
-                    >
+                    <Text variant="caption" color="gray600" className={styles.label}>
                       Status
                     </Text>
                     <div className={styles.statusBadge}>
@@ -360,11 +326,7 @@ function TransactionDetails({
               {/* Tipo, Valor */}
               <div className={styles.detailRow}>
                 <div className={styles.detailItem}>
-                  <Text
-                    variant="caption"
-                    color="gray600"
-                    className={styles.label}
-                  >
+                  <Text variant="caption" color="gray600" className={styles.label}>
                     Tipo
                   </Text>
                   <Text variant="caption">
@@ -373,11 +335,7 @@ function TransactionDetails({
                 </div>
 
                 <div className={styles.detailItem}>
-                  <Text
-                    variant="caption"
-                    color="gray600"
-                    className={styles.label}
-                  >
+                  <Text variant="caption" color="gray600" className={styles.label}>
                     Valor
                   </Text>
                   <Text
@@ -395,11 +353,7 @@ function TransactionDetails({
                 <div className={styles.detailRow}>
                   {transaction.from && (
                     <div className={styles.detailItem}>
-                      <Text
-                        variant="caption"
-                        color="gray600"
-                        className={styles.label}
-                      >
+                      <Text variant="caption" color="gray600" className={styles.label}>
                         De
                       </Text>
                       <Text variant="caption" className={styles.value}>
@@ -410,11 +364,7 @@ function TransactionDetails({
 
                   {transaction.to && (
                     <div className={styles.detailItem}>
-                      <Text
-                        variant="caption"
-                        color="gray600"
-                        className={styles.label}
-                      >
+                      <Text variant="caption" color="gray600" className={styles.label}>
                         Para
                       </Text>
                       <Text variant="caption" className={styles.value}>
@@ -427,20 +377,12 @@ function TransactionDetails({
 
               {hasAttachment && (
                 <div className={styles.attachmentSection}>
-                  <Text
-                    variant="subtitle"
-                    weight="semibold"
-                    className={styles.attachmentTitle}
-                  >
+                  <Text variant="subtitle" weight="semibold" className={styles.attachmentTitle}>
                     Anexo
                   </Text>
                   <div className={styles.attachmentInfo}>
                     {transaction.anexo && (
-                      <Text
-                        variant="caption"
-                        color="gray600"
-                        className={styles.attachmentName}
-                      >
+                      <Text variant="caption" color="gray600" className={styles.attachmentName}>
                         {transaction.anexo}
                       </Text>
                     )}
@@ -449,10 +391,7 @@ function TransactionDetails({
                         <Button
                           variant="outlined"
                           onClick={() =>
-                            handleDownload(
-                              transaction.urlAnexo!,
-                              transaction.anexo || "anexo"
-                            )
+                            handleDownload(transaction.urlAnexo!, transaction.anexo || "anexo")
                           }
                         >
                           <span className={styles.actionButtonContent}>
@@ -483,11 +422,7 @@ function TransactionDetails({
                   </Button>
                 </div>
                 <div className={styles.actionButtonWrapper}>
-                  <Button
-                    variant="primary"
-                    onClick={handleEdit}
-                    disabled={deleting || loading}
-                  >
+                  <Button variant="primary" onClick={handleEdit} disabled={deleting || loading}>
                     <span className={styles.actionButtonContent}>
                       <Icon name="Pencil" size="small" color="white" />
                       Editar

@@ -40,8 +40,9 @@ export interface TransactionResponse {
 
 export interface TransactionsListResponse {
   message: string;
-  result: Transaction[] | {
-    transactions: Transaction[];
-  };
+  result:
+    | Transaction[]
+    | {
+        transactions: Transaction[];
+      };
 }
-

@@ -31,10 +31,7 @@ export function getViewParamFromUrl(): string | null {
 /**
  * Atualiza os parâmetros da URL e dispara evento de navegação
  */
-export function updateUrlParams(
-  params: Record<string, string | null>,
-  dispatchEvent = true
-): void {
+export function updateUrlParams(params: Record<string, string | null>, dispatchEvent = true): void {
   if (typeof window === "undefined" || !window.history) {
     return;
   }
@@ -56,4 +53,3 @@ export function updateUrlParams(
     }, 0);
   }
 }
-

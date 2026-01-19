@@ -38,4 +38,3 @@ export function removeAccountId(): void {
     console.error("Erro ao remover accountId do localStorage:", error);
   }
 }
-

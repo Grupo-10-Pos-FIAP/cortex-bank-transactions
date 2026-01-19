@@ -8,11 +8,7 @@ interface SuccessMessageProps {
   duration?: number;
 }
 
-function SuccessMessage({
-  message,
-  onDismiss,
-  duration = 3000,
-}: SuccessMessageProps) {
+function SuccessMessage({ message, onDismiss, duration = 3000 }: SuccessMessageProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {

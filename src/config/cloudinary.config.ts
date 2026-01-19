@@ -1,6 +1,6 @@
 /**
  * Configuração do Cloudinary
- * 
+ *
  * As credenciais devem ser configuradas via variáveis de ambiente
  * para segurança.
  */
@@ -33,4 +33,3 @@ export function isCloudinaryConfigured(): boolean {
   const config = getCloudinaryConfig();
   return !!(config.cloudName && config.uploadPreset);
 }
-
