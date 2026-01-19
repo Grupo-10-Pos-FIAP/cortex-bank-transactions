@@ -153,7 +153,6 @@ function TransactionDetails({
   const handleSuccessModalConfirm = useCallback(() => {
     setShowSuccessModal(false);
 
-    // Volta para /statement após excluir
     if (window.location) {
       window.location.href = "/statement";
     }

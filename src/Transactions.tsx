@@ -118,7 +118,6 @@ function Transactions({
           setSuccessMessage("");
         }, 3000);
       } catch (error) {
-        // Error is handled by transactionHook.error
       }
     },
     [accountId, transactionHook],
@@ -147,7 +146,6 @@ function Transactions({
         setShowSuccessModal(true);
         setTransaction(updatedTransaction);
       } catch (error) {
-        // Error is handled by transactionHook.error
       }
     },
     [transactionId, urlTransactionId, transactionHook],
@@ -196,7 +194,6 @@ function Transactions({
         setSuccessModalType("delete");
         setShowSuccessModal(true);
       } catch (error) {
-        // Error is handled by transactionHook.error
       }
     },
     [transactionHook, urlTransactionId],
@@ -224,7 +221,6 @@ function Transactions({
     [isEditMode, handleCreate, handleUpdate],
   );
 
-  // Mostra loading enquanto busca a transação
   if (loadingTransaction) {
     return (
       <div className={styles.transactions}>
@@ -243,7 +239,6 @@ function Transactions({
   }
 
   if (loadError && isEditMode) {
-    // Detect invalid account error (customize this check as needed)
     const isInvalidAccount =
       loadError.message?.toLowerCase().includes("conta não identificada") ||
       loadError.message?.toLowerCase().includes("account not found") ||
