@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@grupo10-pos-fiap/design-system": "^1.0.9",
+    "@tanstack/react-query": "^5.90.16",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@types/systemjs": "^6.1.1",
