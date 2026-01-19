@@ -9,7 +9,9 @@ export function parseCurrency(value: string): number {
     return 0;
   }
 
-  const cleaned = value.replace(/\./g, "").replace(",", ".");
+  const trimmed = value.trim();
+  let cleaned = trimmed.replace(/[R$\s]/g, "");
+  cleaned = cleaned.replace(/\./g, "").replace(",", ".");
   const parsed = parseFloat(cleaned);
 
   return isNaN(parsed) ? 0 : parsed;

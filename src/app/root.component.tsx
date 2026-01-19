@@ -7,6 +7,7 @@ import TransactionDetails from "../components/TransactionDetails";
 import { QueryProvider } from "../providers/QueryProvider";
 import styles from "./root.component.module.css";
 import "../styles/tokens.css";
+import InvalidAccountCard from "@/components/InvalidAccountCard";
 
 export interface RootProps {
   name?: string;
@@ -106,9 +107,9 @@ export default function Root(_props: RootProps) {
     };
   }, []);
 
-  const handleRefresh = useCallback(() => {
-    loadAccountId();
-  }, [loadAccountId]);
+  const handleRefreshAccount = useCallback(() => {
+    window.location.reload();
+  }, []);
 
   const handleBackFromDetails = useCallback(() => {
     if (window.location) {
@@ -141,27 +142,7 @@ export default function Root(_props: RootProps) {
     return (
       <QueryProvider>
         <div className={styles.container}>
-          <Card title="Transações" variant="elevated" color="white">
-            <Card.Section>
-              <div style={{ textAlign: "center", padding: "var(--spacing-xl)" }}>
-                <Text
-                  variant="subtitle"
-                  weight="semibold"
-                  color="error"
-                  style={{ marginBottom: "var(--spacing-md)" }}
-                >
-                  Conta não identificada
-                </Text>
-                <Text variant="body" color="gray600" style={{ marginBottom: "var(--spacing-lg)" }}>
-                  Não foi possível identificar a conta. Por favor, verifique se o accountId está
-                  armazenado no localStorage.
-                </Text>
-                <Button variant="primary" onClick={handleRefresh} width="90px">
-                  Atualizar Tela
-                </Button>
-              </div>
-            </Card.Section>
-          </Card>
+          <InvalidAccountCard handleClick={handleRefreshAccount} />
         </div>
       </QueryProvider>
     );
@@ -184,7 +165,12 @@ export default function Root(_props: RootProps) {
   return (
     <QueryProvider>
       <div className={styles.container}>
-        <Transactions accountId={accountId} transactionId={transactionId} />
+        <Transactions
+          accountId={accountId}
+          transactionId={transactionId}
+          loadingAccount={loadingAccount}
+          handleRefreshAccount={handleRefreshAccount}
+        />
       </div>
     </QueryProvider>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { Card, Text, Button, Loading } from "@grupo10-pos-fiap/design-system";
 import { useTransaction } from "@/hooks/useTransaction";
 import { Transaction } from "@/types/transactions";
@@ -9,11 +9,15 @@ import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
 import SuccessModal from "@/components/SuccessModal";
 import styles from "./Transactions.module.css";
+import InvalidAccountCard from "./components/InvalidAccountCard";
 
 interface TransactionsProps {
   accountId: string | null;
   transactionId?: string | null;
   transaction?: Transaction | null;
+  onRefreshAccount?: () => void;
+  loadingAccount?: boolean;
+  handleRefreshAccount?: () => void;
 }
 
 type SuccessModalType = "update" | "delete" | null;
@@ -22,6 +26,9 @@ function Transactions({
   accountId,
   transactionId,
   transaction: initialTransaction,
+  onRefreshAccount,
+  loadingAccount = false,
+  handleRefreshAccount,
 }: TransactionsProps) {
   const [transaction, setTransaction] = useState<Transaction | null>(initialTransaction || null);
   const [successMessage, setSuccessMessage] = useState<string>("");
@@ -34,6 +41,11 @@ function Transactions({
   const transactionHook = useTransaction();
   const urlTransactionId = getTransactionIdFromUrl();
   const isEditMode = !!(transactionId || urlTransactionId || transaction);
+
+  const refreshAccount = useMemo(
+    () => handleRefreshAccount || onRefreshAccount || (() => window.location.reload()),
+    [handleRefreshAccount, onRefreshAccount]
+  );
 
   useEffect(() => {
     const idToFetch = urlTransactionId || transactionId;
@@ -131,6 +143,12 @@ function Transactions({
     setUpdatedTransactionId(null);
   }, [successModalType, updatedTransactionId]);
 
+  useEffect(() => {
+    if (!showSuccessModal && (successModalType === "update" || successModalType === "delete")) {
+      refreshAccount();
+    }
+  }, [showSuccessModal, successModalType, refreshAccount]);
+
   const handleDelete = useCallback(
     async (id: string) => {
       try {
@@ -172,15 +190,19 @@ function Transactions({
     [isEditMode, handleCreate, handleUpdate]
   );
 
+  if (loadingAccount) {
+    return (
+      <div className={styles.transactions}>
+        <Loading text="Carregando..." size="medium" />
+      </div>
+    );
+  }
+
   if (!accountId) {
     return (
-      <Card title="Transações" variant="elevated" color="white">
-        <Card.Section>
-          <Text variant="body" color="gray600">
-            Conta não encontrada
-          </Text>
-        </Card.Section>
-      </Card>
+      <div className={styles.transactions}>
+        <InvalidAccountCard handleClick={refreshAccount} />
+      </div>
     );
   }
 
@@ -197,6 +219,16 @@ function Transactions({
   }
 
   if (loadError && isEditMode) {
+    const isInvalidAccount =
+      loadError.message?.toLowerCase().includes("conta não identificada") ||
+      loadError.message?.toLowerCase().includes("account not found") ||
+      loadError.message?.toLowerCase().includes("unauthorized") ||
+      loadError.message?.toLowerCase().includes("invalid account");
+
+    if (isInvalidAccount) {
+      return <InvalidAccountCard handleClick={onRefreshAccount} />;
+    }
+
     return (
       <div className={styles.transactions}>
         <Card title="Editar Transação" variant="elevated" color="white" className={styles.card}>
