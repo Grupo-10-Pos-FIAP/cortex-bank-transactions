@@ -9,11 +9,15 @@ import ErrorMessage from "@/components/ErrorMessage";
 import SuccessMessage from "@/components/SuccessMessage";
 import SuccessModal from "@/components/SuccessModal";
 import styles from "./Transactions.module.css";
+import InvalidAccountCard from "./components/InvalidAccountCard";
 
 interface TransactionsProps {
   accountId: string | null;
   transactionId?: string | null;
   transaction?: Transaction | null;
+  onRefreshAccount?: () => void;
+  loadingAccount?: boolean;
+  handleRefreshAccount?: () => void;
 }
 
 type SuccessModalType = "update" | "delete" | null;
@@ -22,9 +26,12 @@ function Transactions({
   accountId,
   transactionId,
   transaction: initialTransaction,
+  onRefreshAccount,
+  loadingAccount = false,
+  handleRefreshAccount,
 }: TransactionsProps) {
   const [transaction, setTransaction] = useState<Transaction | null>(
-    initialTransaction || null
+    initialTransaction || null,
   );
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
@@ -39,6 +46,27 @@ function Transactions({
   const transactionHook = useTransaction();
   const urlTransactionId = getTransactionIdFromUrl();
   const isEditMode = !!(transactionId || urlTransactionId || transaction);
+
+  const refreshAccount =
+    handleRefreshAccount ||
+    onRefreshAccount ||
+    (() => window.location.reload());
+
+  if (loadingAccount) {
+    return (
+      <div className={styles.transactions}>
+        <Loading text="Carregando..." size="medium" />
+      </div>
+    );
+  }
+
+  if (!accountId) {
+    return (
+      <div className={styles.transactions}>
+        <InvalidAccountCard handleClick={refreshAccount} />
+      </div>
+    );
+  }
 
   useEffect(() => {
     const idToFetch = urlTransactionId || transactionId;
@@ -55,7 +83,7 @@ function Transactions({
           setLoadError(
             error instanceof Error
               ? error
-              : new Error("Erro ao carregar transação")
+              : new Error("Erro ao carregar transação"),
           );
         })
         .finally(() => {
@@ -93,7 +121,7 @@ function Transactions({
         // Error is handled by transactionHook.error
       }
     },
-    [accountId, transactionHook]
+    [accountId, transactionHook],
   );
 
   const handleUpdate = useCallback(
@@ -122,7 +150,7 @@ function Transactions({
         // Error is handled by transactionHook.error
       }
     },
-    [transactionId, urlTransactionId, transactionHook]
+    [transactionId, urlTransactionId, transactionHook],
   );
 
   const handleSuccessModalConfirm = useCallback(() => {
@@ -144,6 +172,15 @@ function Transactions({
     setUpdatedTransactionId(null);
   }, [successModalType, updatedTransactionId]);
 
+  useEffect(() => {
+    if (
+      !showSuccessModal &&
+      (successModalType === "update" || successModalType === "delete")
+    ) {
+      refreshAccount();
+    }
+  }, [showSuccessModal]);
+
   const handleDelete = useCallback(
     async (id: string) => {
       try {
@@ -162,7 +199,7 @@ function Transactions({
         // Error is handled by transactionHook.error
       }
     },
-    [transactionHook, urlTransactionId]
+    [transactionHook, urlTransactionId],
   );
 
   const handleCancel = useCallback(() => {
@@ -184,21 +221,10 @@ function Transactions({
         await handleCreate(data);
       }
     },
-    [isEditMode, handleCreate, handleUpdate]
+    [isEditMode, handleCreate, handleUpdate],
   );
 
-  if (!accountId) {
-    return (
-      <Card title="Transações" variant="elevated" color="white">
-        <Card.Section>
-          <Text variant="body" color="gray600">
-            Conta não encontrada
-          </Text>
-        </Card.Section>
-      </Card>
-    );
-  }
-
+  // Mostra loading enquanto busca a transação
   if (loadingTransaction) {
     return (
       <div className={styles.transactions}>
@@ -217,6 +243,17 @@ function Transactions({
   }
 
   if (loadError && isEditMode) {
+    // Detect invalid account error (customize this check as needed)
+    const isInvalidAccount =
+      loadError.message?.toLowerCase().includes("conta não identificada") ||
+      loadError.message?.toLowerCase().includes("account not found") ||
+      loadError.message?.toLowerCase().includes("unauthorized") ||
+      loadError.message?.toLowerCase().includes("invalid account");
+
+    if (isInvalidAccount) {
+      return <InvalidAccountCard handleClick={onRefreshAccount} />;
+    }
+
     return (
       <div className={styles.transactions}>
         <Card
@@ -246,7 +283,7 @@ function Transactions({
                       setLoadError(
                         error instanceof Error
                           ? error
-                          : new Error("Erro ao carregar transação")
+                          : new Error("Erro ao carregar transação"),
                       );
                     })
                     .finally(() => {

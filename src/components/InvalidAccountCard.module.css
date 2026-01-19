@@ -6,29 +6,16 @@
   box-sizing: border-box;
   min-height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .card {
   background-color: white !important;
 }
 
-.loading,
-.error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: var(--spacing-2xl);
-  font-size: var(--font-body);
-  color: var(--color-gray600);
-}
-
-.error {
-  color: var(--color-error);
-}
-
 @media (max-width: 768px) {
   .container {
-    padding: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-sm);
     padding-bottom: calc(var(--spacing-2xl) + env(safe-area-inset-bottom, 0px));
     margin-bottom: var(--spacing-xl);
   }
