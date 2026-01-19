@@ -7,6 +7,7 @@ import {
 } from "@/utils/urlParams";
 import Transactions from "../Transactions";
 import TransactionDetails from "../components/TransactionDetails";
+import { QueryProvider } from "../providers/QueryProvider";
 import styles from "./root.component.module.css";
 import "../styles/tokens.css";
 
@@ -139,59 +140,69 @@ export default function Root(_props: RootProps) {
 
   if (loadingAccount) {
     return (
-      <div className={styles.container}>
-        <Loading text="Carregando..." size="medium" />
-      </div>
+      <QueryProvider>
+        <div className={styles.container}>
+          <Loading text="Carregando..." size="medium" />
+        </div>
+      </QueryProvider>
     );
   }
 
   if (!accountId) {
     return (
-      <div className={styles.container}>
-        <Card title="Transações" variant="elevated" color="white">
-          <Card.Section>
-            <div style={{ textAlign: "center", padding: "var(--spacing-xl)" }}>
-              <Text
-                variant="subtitle"
-                weight="semibold"
-                color="error"
-                style={{ marginBottom: "var(--spacing-md)" }}
+      <QueryProvider>
+        <div className={styles.container}>
+          <Card title="Transações" variant="elevated" color="white">
+            <Card.Section>
+              <div
+                style={{ textAlign: "center", padding: "var(--spacing-xl)" }}
               >
-                Conta não identificada
-              </Text>
-              <Text
-                variant="body"
-                color="gray600"
-                style={{ marginBottom: "var(--spacing-lg)" }}
-              >
-                Não foi possível identificar a conta. Por favor, verifique se o
-                accountId está armazenado no localStorage.
-              </Text>
-              <Button variant="primary" onClick={handleRefresh} width="90px">
-                Atualizar Tela
-              </Button>
-            </div>
-          </Card.Section>
-        </Card>
-      </div>
+                <Text
+                  variant="subtitle"
+                  weight="semibold"
+                  color="error"
+                  style={{ marginBottom: "var(--spacing-md)" }}
+                >
+                  Conta não identificada
+                </Text>
+                <Text
+                  variant="body"
+                  color="gray600"
+                  style={{ marginBottom: "var(--spacing-lg)" }}
+                >
+                  Não foi possível identificar a conta. Por favor, verifique se
+                  o accountId está armazenado no localStorage.
+                </Text>
+                <Button variant="primary" onClick={handleRefresh} width="90px">
+                  Atualizar Tela
+                </Button>
+              </div>
+            </Card.Section>
+          </Card>
+        </div>
+      </QueryProvider>
     );
   }
 
   if (view === "details" && transactionId) {
     return (
-      <div className={styles.container}>
-        <TransactionDetails
-          transactionId={transactionId}
-          onBack={handleBackFromDetails}
-          onEdit={handleEditFromDetails}
-        />
-      </div>
+      <QueryProvider>
+        <div className={styles.container}>
+          <TransactionDetails
+            transactionId={transactionId}
+            onBack={handleBackFromDetails}
+            onEdit={handleEditFromDetails}
+          />
+        </div>
+      </QueryProvider>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <Transactions accountId={accountId} transactionId={transactionId} />
-    </div>
+    <QueryProvider>
+      <div className={styles.container}>
+        <Transactions accountId={accountId} transactionId={transactionId} />
+      </div>
+    </QueryProvider>
   );
 }
