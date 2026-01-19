@@ -6,6 +6,17 @@ import { applyCurrencyMask, parseCurrency } from "@/utils/currencyMask";
 import { formatValue } from "@/utils/formatters";
 import styles from "./TransactionForm.module.css";
 
+function getUserName(): string {
+  if (typeof window === "undefined" || !window.localStorage) {
+    return "";
+  }
+  try {
+    return localStorage.getItem("userName") || "";
+  } catch (error) {
+    return "";
+  }
+}
+
 interface TransactionFormProps {
   transaction?: Transaction;
   accountId: string;
@@ -50,13 +61,14 @@ function TransactionForm({
   const [deleting, setDeleting] = useState<boolean>(false);
 
   useEffect(() => {
+    const userName = getUserName();
     if (transaction) {
       const absoluteValue = Math.abs(transaction.value);
       setFormData({
         accountId: transaction.accountId,
         value: formatValue(absoluteValue),
         type: transaction.type,
-        from: transaction.from || "",
+        from: userName || transaction.from || "",
         to: transaction.to || "",
         anexo: transaction.anexo || "",
         urlAnexo: transaction.urlAnexo || "",
@@ -66,6 +78,7 @@ function TransactionForm({
         ...initialFormData,
         accountId,
         type: "",
+        from: userName,
       });
     }
   }, [transaction, accountId]);
@@ -168,8 +181,9 @@ function TransactionForm({
         }
       }
 
-      if (!formData.from || formData.from.trim() === "") {
-        errors.from = "O campo 'De' é obrigatório";
+      const userName = getUserName();
+      if (!userName || userName.trim() === "") {
+        errors.from = "Usuário não identificado";
       }
 
       if (!formData.to || formData.to.trim() === "") {
@@ -194,7 +208,7 @@ function TransactionForm({
         accountId: formData.accountId,
         value,
         type: formData.type as "Debit" | "Credit",
-        from: formData.from,
+        from: userName || formData.from,
         to: formData.to,
         anexo: formData.anexo || undefined,
         urlAnexo: formData.urlAnexo || undefined,
@@ -265,7 +279,7 @@ function TransactionForm({
       </div>
 
       <div className={styles.formRow}>
-        <div className={styles.formField}>
+        <div className={`${styles.formField} ${styles.disabledField}`}>
           <Text variant="body" weight="medium" className={styles.label}>
             De *
           </Text>
@@ -273,8 +287,8 @@ function TransactionForm({
             type="text"
             value={formData.from}
             onChange={(e) => handleInputChange("from", e.target.value)}
-            placeholder="Nome ou identificador"
-            disabled={loading}
+            placeholder="Nome do proprietário da conta"
+            disabled={true}
             width="100%"
           />
           {fieldErrors.from && (

@@ -14,7 +14,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
-  min-width: 0; /* Previne overflow em grid items */
+  min-width: 0;
+}
+
+.disabledField :global(input:disabled) {
+  background-color: var(--color-gray100) !important;
+  color: var(--color-content-default) !important;
+  opacity: 1 !important;
+  border-color: var(--color-gray300) !important;
 }
 
 .fileInputWrapper {
