@@ -31,6 +31,7 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
   const [deleting, setDeleting] = useState<boolean>(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const loadTransaction = useCallback(async () => {
     if (!transactionId) return;
@@ -89,7 +90,8 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
       try {
         window.open(url, "_blank", "noopener,noreferrer");
       } catch (fallbackErr) {
-        alert(err instanceof Error ? err.message : "Erro ao baixar arquivo");
+        setDownloadError(err instanceof Error ? err.message : "Erro ao baixar arquivo");
+        setTimeout(() => setDownloadError(null), 5000);
       }
     }
   }, []);
@@ -379,6 +381,11 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
                     {transaction.anexo && (
                       <Text variant="caption" color="gray600" className={styles.attachmentName}>
                         {transaction.anexo}
+                      </Text>
+                    )}
+                    {downloadError && (
+                      <Text variant="caption" color="error" style={{ marginBottom: "8px" }}>
+                        {downloadError}
                       </Text>
                     )}
                     {transaction.urlAnexo && (
