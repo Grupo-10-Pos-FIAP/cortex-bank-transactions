@@ -9,7 +9,6 @@ export function getAccountId(): string | null {
     const accountId = localStorage.getItem(ACCOUNT_ID_KEY);
     return accountId || null;
   } catch (error) {
-    console.error("Erro ao ler accountId do localStorage:", error);
     return null;
   }
 }
@@ -22,9 +21,7 @@ export function setAccountId(accountId: string): void {
   try {
     localStorage.setItem(ACCOUNT_ID_KEY, accountId);
     window.dispatchEvent(new CustomEvent("accountIdChanged", { detail: { accountId } }));
-  } catch (error) {
-    console.error("Erro ao salvar accountId no localStorage:", error);
-  }
+  } catch (error) {}
 }
 
 export function removeAccountId(): void {
@@ -34,7 +31,5 @@ export function removeAccountId(): void {
 
   try {
     localStorage.removeItem(ACCOUNT_ID_KEY);
-  } catch (error) {
-    console.error("Erro ao remover accountId do localStorage:", error);
-  }
+  } catch (error) {}
 }

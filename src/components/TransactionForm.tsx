@@ -145,9 +145,7 @@ function TransactionForm({
 
       try {
         await onSubmit(transactionData);
-      } catch (error) {
-        // Error is handled by parent component
-      }
+      } catch (error) {}
     },
     [formData, transaction, onSubmit]
   );

@@ -1,13 +1,3 @@
-/**
- * Serviço de upload de arquivos
- *
- * Este serviço é desacoplado para facilitar migração futura.
- * Atualmente usa Cloudinary para upload de arquivos.
- *
- * Para migrar para outro serviço (ex: S3, outro storage), basta substituir
- * a implementação desta função mantendo a mesma interface.
- */
-
 import { uploadToCloudinary } from "./cloudinaryUpload";
 import { getCloudinaryConfig } from "@/config/cloudinary.config";
 
@@ -18,12 +8,6 @@ export interface FileUploadResult {
   mimeType: string;
 }
 
-/**
- * Faz upload de um arquivo para o Cloudinary
- *
- * @param file Arquivo a ser enviado
- * @returns Promise com a URL do arquivo e metadados
- */
 export async function uploadFile(file: File): Promise<FileUploadResult> {
   if (!file) {
     throw new Error("Arquivo não fornecido");
@@ -48,13 +32,6 @@ export async function uploadFile(file: File): Promise<FileUploadResult> {
   }
 }
 
-/**
- * Valida se o arquivo é válido
- *
- * @param file Arquivo a ser validado
- * @param maxSizeInMB Tamanho máximo em MB (padrão: 5MB)
- * @returns true se válido, false caso contrário
- */
 export function validateFile(file: File, maxSizeInMB: number = 5): boolean {
   if (!file) {
     return false;

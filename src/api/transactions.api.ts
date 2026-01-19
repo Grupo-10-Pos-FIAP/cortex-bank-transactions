@@ -7,9 +7,6 @@ import {
 } from "@/types/transactions";
 import { fetchApi } from "@/utils/apiClient";
 
-/**
- * Busca uma transação por ID
- */
 export async function getTransaction(id: string): Promise<Transaction> {
   try {
     const response = await fetchApi(`/account/transaction/${id}`, {
@@ -58,9 +55,6 @@ export async function getTransaction(id: string): Promise<Transaction> {
   }
 }
 
-/**
- * Cria uma nova transação
- */
 export async function createTransaction(data: CreateTransactionRequest): Promise<Transaction> {
   try {
     const response = await fetchApi("/account/transaction", {
@@ -75,9 +69,6 @@ export async function createTransaction(data: CreateTransactionRequest): Promise
   }
 }
 
-/**
- * Atualiza uma transação existente
- */
 export async function updateTransaction(
   id: string,
   data: UpdateTransactionRequest
@@ -95,9 +86,6 @@ export async function updateTransaction(
   }
 }
 
-/**
- * Exclui uma transação
- */
 export async function deleteTransaction(id: string): Promise<void> {
   try {
     await fetchApi(`/account/transaction/${id}`, {

@@ -75,9 +75,7 @@ export default function Root(_props: RootProps) {
         const newView = getViewParamFromUrl();
         setTransactionId(newId);
         setView(newView);
-      } catch (error) {
-        console.error("Erro ao ler parâmetros da URL:", error);
-      }
+      } catch (error) {}
     };
 
     updateUrlParams();

@@ -80,9 +80,7 @@ function Transactions({
         setTimeout(() => {
           setSuccessMessage("");
         }, 3000);
-      } catch (error) {
-        // Error is handled by transactionHook.error
-      }
+      } catch (error) {}
     },
     [accountId, transactionHook]
   );
@@ -109,9 +107,7 @@ function Transactions({
         setSuccessModalType("update");
         setShowSuccessModal(true);
         setTransaction(updatedTransaction);
-      } catch (error) {
-        // Error is handled by transactionHook.error
-      }
+      } catch (error) {}
     },
     [transactionId, urlTransactionId, transactionHook]
   );
@@ -149,9 +145,7 @@ function Transactions({
 
         setSuccessModalType("delete");
         setShowSuccessModal(true);
-      } catch (error) {
-        // Error is handled by transactionHook.error
-      }
+      } catch (error) {}
     },
     [transactionHook, urlTransactionId]
   );

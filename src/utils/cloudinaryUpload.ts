@@ -1,10 +1,3 @@
-/**
- * Serviço de upload para Cloudinary
- *
- * Este serviço é desacoplado e pode ser facilmente substituído.
- * Mantém a mesma interface do fileUpload.ts
- */
-
 export interface FileUploadResult {
   url: string;
   fileName: string;
@@ -12,14 +5,6 @@ export interface FileUploadResult {
   mimeType: string;
 }
 
-/**
- * Faz upload de um arquivo para o Cloudinary
- *
- * @param file Arquivo a ser enviado
- * @param cloudName Nome da conta Cloudinary
- * @param uploadPreset Preset de upload (pode ser unsigned)
- * @returns Promise com a URL do arquivo e metadados
- */
 export async function uploadToCloudinary(
   file: File,
   cloudName: string,

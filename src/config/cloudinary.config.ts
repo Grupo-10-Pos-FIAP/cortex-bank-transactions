@@ -1,19 +1,9 @@
-/**
- * Configuração do Cloudinary
- *
- * As credenciais devem ser configuradas via variáveis de ambiente
- * para segurança.
- */
-
 export interface CloudinaryConfig {
   cloudName: string;
   uploadPreset: string;
   folder?: string;
 }
 
-/**
- * Obtém a configuração do Cloudinary das variáveis de ambiente
- */
 export function getCloudinaryConfig(): CloudinaryConfig {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME || "";
   const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET || "";
@@ -26,9 +16,6 @@ export function getCloudinaryConfig(): CloudinaryConfig {
   };
 }
 
-/**
- * Verifica se o Cloudinary está configurado
- */
 export function isCloudinaryConfigured(): boolean {
   const config = getCloudinaryConfig();
   return !!(config.cloudName && config.uploadPreset);

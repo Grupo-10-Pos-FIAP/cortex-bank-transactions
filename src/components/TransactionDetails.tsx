@@ -145,7 +145,6 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
   const handleSuccessModalConfirm = useCallback(() => {
     setShowSuccessModal(false);
 
-    // Volta para /statement após excluir
     if (window.location) {
       window.location.href = "/statement";
     }
@@ -273,7 +272,6 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
           </div>
           <Card.Section className={styles.section}>
             <div className={styles.details}>
-              {/* ID, Conta */}
               <div className={styles.detailRow}>
                 <div className={styles.detailItem}>
                   <Text variant="caption" color="gray600" className={styles.label}>
@@ -296,7 +294,6 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
                 )}
               </div>
 
-              {/* Data, Status */}
               <div className={styles.detailRow}>
                 {transaction.date && (
                   <div className={styles.detailItem}>
@@ -323,7 +320,6 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
                 )}
               </div>
 
-              {/* Tipo, Valor */}
               <div className={styles.detailRow}>
                 <div className={styles.detailItem}>
                   <Text variant="caption" color="gray600" className={styles.label}>
@@ -348,7 +344,6 @@ function TransactionDetails({ transactionId, onBack, onEdit }: TransactionDetail
                 </div>
               </div>
 
-              {/* De, Para */}
               {(transaction.from || transaction.to) && (
                 <div className={styles.detailRow}>
                   {transaction.from && (
