@@ -146,13 +146,25 @@ function TransactionForm({
         return;
       }
 
+      if (!formData.from || formData.from.trim() === "") {
+        setFileError("O campo 'De' é obrigatório");
+        return;
+      }
+
+      if (!formData.to || formData.to.trim() === "") {
+        setFileError("O campo 'Para' é obrigatório");
+        return;
+      }
+
+      setFileError("");
+
       const transactionData: Transaction = {
         ...(transaction?.id && { id: transaction.id }),
         accountId: formData.accountId,
         value,
         type: formData.type,
-        from: formData.from || undefined,
-        to: formData.to || undefined,
+        from: formData.from,
+        to: formData.to,
         anexo: formData.anexo || undefined,
         urlAnexo: formData.urlAnexo || undefined,
       };
@@ -213,7 +225,7 @@ function TransactionForm({
       <div className={styles.formRow}>
         <div className={styles.formField}>
           <Text variant="body" weight="medium" className={styles.label}>
-            De
+            De *
           </Text>
           <Input
             type="text"
@@ -221,13 +233,14 @@ function TransactionForm({
             onChange={(e) => handleInputChange("from", e.target.value)}
             placeholder="Nome ou identificador"
             disabled={loading}
+            required
             width="100%"
           />
         </div>
 
         <div className={styles.formField}>
           <Text variant="body" weight="medium" className={styles.label}>
-            Para
+            Para *
           </Text>
           <Input
             type="text"
@@ -235,6 +248,7 @@ function TransactionForm({
             onChange={(e) => handleInputChange("to", e.target.value)}
             placeholder="Nome ou identificador"
             disabled={loading}
+            required
             width="100%"
           />
         </div>
