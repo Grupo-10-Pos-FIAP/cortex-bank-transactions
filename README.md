@@ -2,11 +2,11 @@
 
 Microfrontend de gerenciamento de transações bancárias desenvolvido como parte do projeto Cortex Bank para a pós-graduação em Engenharia de Software Frontend.
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 Este é um microfrontend responsável pelo módulo de transações do sistema bancário Cortex Bank. A aplicação permite criar, visualizar, editar e excluir transações financeiras (débitos e créditos), com suporte a upload de anexos e integração com serviços de armazenamento em nuvem.
 
-## 🏗️ Arquitetura
+## Arquitetura
 
 A aplicação foi desenvolvida utilizando a arquitetura de **microfrontends** com **Single-SPA**, permitindo:
 
@@ -14,7 +14,7 @@ A aplicação foi desenvolvida utilizando a arquitetura de **microfrontends** co
 - **Integração flexível**: Pode ser executado de forma standalone ou integrado ao shell principal
 - **Reutilização de componentes**: Utiliza o Design System compartilhado `@grupo10-pos-fiap/design-system`
 
-## 🚀 Tecnologias
+## Tecnologias
 
 - **React 19.2.0** - Biblioteca para construção da interface
 - **TypeScript 4.3.5** - Tipagem estática
@@ -23,7 +23,7 @@ A aplicação foi desenvolvida utilizando a arquitetura de **microfrontends** co
 - **ESLint + Prettier** - Linting e formatação de código
 - **Husky** - Git hooks para qualidade de código
 
-## 📦 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 transactions/
@@ -33,15 +33,17 @@ transactions/
 │   ├── components/       # Componentes React reutilizáveis
 │   ├── config/           # Configurações (API, Cloudinary)
 │   ├── hooks/            # Custom hooks
+│   ├── lib/              # Client Queries
+│   ├── providers/        # Context providers
+│   └── styles/           # Estilos globais
 │   ├── types/            # Definições TypeScript
 │   ├── utils/            # Funções utilitárias
-│   └── styles/           # Estilos globais
 ├── .github/              # Workflows CI/CD
 ├── webpack.config.js     # Configuração do Webpack
 └── package.json          # Dependências e scripts
 ```
 
-## 🎯 Funcionalidades
+## Funcionalidades
 
 ### Transações
 
@@ -61,12 +63,11 @@ transactions/
 - 🔗 **LocalStorage**: Persistência de dados do usuário (accountId)
 - 🔗 **URL Parameters**: Navegação baseada em query params
 
-## 🛠️ Instalação
+## Instalação
 
 ### Pré-requisitos
 
-- Node.js (versão 16 ou superior)
-- npm ou yarn
+- Node.js (versão 22 ou superior)
 
 ### Passos
 
@@ -77,13 +78,13 @@ git clone <repository-url>
 cd transactions
 ```
 
-2. Instale as dependências:
+1. Instale as dependências:
 
 ```bash
 npm install
 ```
 
-3. Configure as variáveis de ambiente:
+1. Configure as variáveis de ambiente:
 
 ```bash
 cp .env.example .env
@@ -99,7 +100,7 @@ CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_UPLOAD_PRESET=your-upload-preset
 ```
 
-## 🚀 Executando a Aplicação
+## Executando a Aplicação
 
 ### Modo Standalone (Desenvolvimento)
 
@@ -127,7 +128,7 @@ Executa em modo standalone apontando para backend local:
 npm run start:backend
 ```
 
-## 📝 Scripts Disponíveis
+## Scripts Disponíveis
 
 | Script                     | Descrição                                                               |
 | -------------------------- | ----------------------------------------------------------------------- |
@@ -142,7 +143,7 @@ npm run start:backend
 | `npm run check-format`     | Verifica formatação sem alterar arquivos                                |
 | `npm run analyze`          | Analisa o bundle gerado                                                 |
 
-## 🏗️ Build de Produção
+## Build de Produção
 
 Para gerar o build de produção:
 
@@ -152,7 +153,7 @@ npm run build
 
 Os arquivos serão gerados no diretório `dist/`.
 
-## 🔧 Configuração
+## Configuração
 
 ### Variáveis de Ambiente
 
@@ -168,7 +169,7 @@ Os arquivos serão gerados no diretório `dist/`.
 
 A aplicação roda na porta **3003** por padrão. Para alterar, edite `webpack.config.js`.
 
-## 📚 Estrutura de Componentes
+## Estrutura de Componentes
 
 ### Componentes Principais
 
@@ -198,7 +199,7 @@ registerApplication({
 });
 ```
 
-## 📡 API
+## API
 
 A aplicação consome os seguintes endpoints:
 
@@ -207,7 +208,7 @@ A aplicação consome os seguintes endpoints:
 - `PUT /account/transaction/:id` - Atualizar transação
 - `DELETE /account/transaction/:id` - Excluir transação
 
-## 🎨 Design System
+## Design System
 
 A aplicação utiliza o Design System `@grupo10-pos-fiap/design-system`, que fornece:
 
@@ -215,7 +216,7 @@ A aplicação utiliza o Design System `@grupo10-pos-fiap/design-system`, que for
 - Tokens de design (cores, espaçamentos, tipografia)
 - Consistência visual entre microfrontends
 
-## 🔒 Qualidade de Código
+## Qualidade de Código
 
 O projeto utiliza:
 
@@ -224,7 +225,7 @@ O projeto utiliza:
 - **Husky**: Git hooks para garantir qualidade antes do commit
 - **TypeScript**: Tipagem estática para maior segurança
 
-## 🚢 Deploy
+## Deploy
 
 O projeto está configurado para deploy no Vercel. O workflow de CI/CD está em `.github/workflows/vercel-deploy-check.yml`.
 
@@ -238,8 +239,11 @@ npm run build
 vercel --prod
 ```
 
-## 📄 Licença
+## Licença
 
-Este projeto foi desenvolvido como parte de uma pós-graduação em Engenharia de Software Frontend.
+Este projeto foi desenvolvido como parte do trabalho de pós-graduação em Engenharia de Front End.
 
----
+## Autores
+
+- [Gabrielle Martins](https://github.com/Gabrielle-96)
+- [Helen Cris](https://github.com/HelenCrisM)
