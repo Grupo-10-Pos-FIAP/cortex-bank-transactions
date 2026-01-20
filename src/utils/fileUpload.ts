@@ -17,13 +17,9 @@ export async function uploadFile(file: File): Promise<FileUploadResult> {
     const config = getCloudinaryConfig();
 
     if (!config.cloudName || !config.uploadPreset) {
-      const tempUrl = `temp://${Date.now()}-${file.name}`;
-      return {
-        url: tempUrl,
-        fileName: file.name,
-        fileSize: file.size,
-        mimeType: file.type || "application/octet-stream",
-      };
+      throw new Error(
+        "Não foi possível realizar o upload do anexo. O serviço de armazenamento não está configurado."
+      );
     }
 
     return await uploadToCloudinary(file, config.cloudName, config.uploadPreset);
